@@ -26,7 +26,7 @@ There are three types of SIP:
   - **Core**: improvements requiring a version upgrade, as well as changes that are not necessarily critical but may be relevant to “core dev” discussions.
   - **Networking**: includes improvements around [the P2P specification](./sip-4.md), as well as proposed improvements to network protocol specifications.
   - **Interface**: includes improvements around client API/RPC specifications and standards, and also certain language-level standards like method names and contract ABIs. Discussions and feedback should primarily occur before a SIP is submitted to the SIPs repository.
-  - **ERC**: application-level standards and conventions, including contract standards, name registries, URI schemes, and library/package formats.
+  - **SRC**: application-level standards and conventions, including contract standards, name registries, URI schemes, and library/package formats.
 
 - A **Meta SIP** describes a process surrounding Seaport or proposes a change to (or an event in) a process. Process SIPs are like Standards Track SIPs but apply to areas other than the Seaport protocol itself. They may propose an implementation, but not to Seaport's codebase; they often require community consensus; unlike Informational SIPs, they are more than recommendations, and users are typically not free to ignore them. Examples include procedures, guidelines, changes to the decision-making process, and changes to the tools or environment used in Seaport development. Any meta-SIP is also considered a Process SIP.
 
@@ -197,6 +197,24 @@ Permitted Seaport GitHub URLs must anchor to a specific commit, and so must matc
 
 ```regex
 ^https://github.com/ProjectOpenSea/seaport/blob/[0-9a-f]{40}/.*$
+```
+
+### EIP Repository
+
+Links to the canonical EIPs website may be included using normal markdown syntax, such as:
+
+```markdown
+[EIP-3668](https://eips.ethereum.org/EIPS/eip-3668)
+```
+
+Which renders as:
+
+[EIP-3668](https://eips.ethereum.org/EIPS/eip-3668)
+
+Permitted URLs must anchor to a specific EIP, and so must match this regular expression:
+
+```regex
+^https://eips.ethereum.org/EIPS/eip-[\d]*$
 ```
 
 ### Digital Object Identifier System

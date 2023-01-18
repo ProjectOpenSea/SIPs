@@ -1,19 +1,17 @@
 ---
-sip: <to be assigned>
-title: <The SIP title is a few words, not a complete sentence>
+sip: 9
+title: Zone Interface for Liquidation Zones
 description: <Description is one full (short) sentence>
 author: <a comma separated list of the author's or authors' name + GitHub username (in parenthesis), or name and email (in angle brackets).  Example, FirstName LastName (@GitHubUsername), FirstName LastName <foo@bar.com>, FirstName (@GitHubUsername) and GitHubUsername (@GitHubUsername)>
-discussions-to: <URL>
+discussions-to: https://github.com/ProjectOpenSea/SIPs/discussions/7
 status: Draft
-type: <Standards Track, Meta, or Informational>
-category (*only required for Standards Track): <Core, Networking, Interface, or SRC>
+type: Standards
+category (*only required for Standards Track): Interface
 created: <date created on, in ISO 8601 (yyyy-mm-dd) format>
-requires (*optional): <SIP number(s)>
+requires (*optional): 5, 6
 ---
 
 This is the suggested template for new SIPs.
-
-Note that an SIP number will be assigned by an editor. When opening a pull request to submit your SIP, please use an abbreviated title in the filename, `sip-draft_title_abbrev.md`.
 
 The title should be 44 characters or less. It should not repeat the SIP number in title, irrespective of the category.
 

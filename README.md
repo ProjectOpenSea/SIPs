@@ -1,6 +1,6 @@
 # Seaport Improvement Proposals (SIPs)
 
-**Before you initiate a pull request**, please read the [SIP-1][sip-1] process document. Ideas should be thoroughly discussed on [Seaport Discussions][seaport-discussions].
+**Before you initiate a pull request**, please read the [SIP-1][sip-1] process document. Ideas should be thoroughly discussed on [SIP Discussions][sip-discussions].
 
 This repository tracks ongoing improvements to Seaport. It contains:
 
@@ -78,6 +78,7 @@ All pull requests in this repository must pass automated checks before they can 
 [^1]: https://github.com/ProjectOpenSea/SIPs/blob/main/.github/workflows/ci.yml
 
 [sip-repository]: https://github.com/ProjectOpenSea/SIPs
+[sip-discussions]: https://github.com/ProjectOpenSea/SIPs/discussions
+[seaport-discussions]: https://github.com/ProjectOpenSea/seaport/discussions
 [sip-1]: https://github.com/ProjectOpenSea/SIPs/blob/main/SIPS/sip-1.md
 [sip-2]: https://github.com/ProjectOpenSea/SIPs/blob/main/SIPS/sip-2.md
-[seaport-discussions]: https://github.com/ProjectOpenSea/seaport/discussions
