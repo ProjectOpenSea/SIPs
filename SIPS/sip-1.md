@@ -153,7 +153,7 @@ At least one author must use a GitHub username, in order to get notified on chan
 
 ### `discussions-to` header
 
-While an SIP is a draft, a `discussions-to` header will indicate the URL where the SIP is being discussed.
+While a SIP is a draft, a `discussions-to` header will indicate the URL where the SIP is being discussed.
 
 The preferred discussion URL is a topic on [Seaport Discussions](https://github.com/ProjectOpenSea/seaport/discussions). The URL cannot point to Github pull requests, any URL which is ephemeral, and any URL which can get locked over time (i.e. Reddit topics).
 
@@ -297,9 +297,9 @@ Images, diagrams and auxiliary files should be included in a subdirectory of the
 
 ## Transferring SIP Ownership
 
-It occasionally becomes necessary to transfer ownership of SIPs to a new champion. In general, we'd like to retain the original author as a co-author of the transferred SIP, but that's really up to the original author. A good reason to transfer ownership is because the original author no longer has the time or interest in updating it or following through with the SIP process, or has fallen off the face of the 'net (i.e. is unreachable or isn't responding to email). A bad reason to transfer ownership is because you don't agree with the direction of the SIP. We try to build consensus around an SIP, but if that's not possible, you can always submit a competing SIP.
+It occasionally becomes necessary to transfer ownership of SIPs to a new champion. In general, we'd like to retain the original author as a co-author of the transferred SIP, but that's really up to the original author. A good reason to transfer ownership is because the original author no longer has the time or interest in updating it or following through with the SIP process, or has fallen off the face of the 'net (i.e. is unreachable or isn't responding to email). A bad reason to transfer ownership is because you don't agree with the direction of the SIP. We try to build consensus around a SIP, but if that's not possible, you can always submit a competing SIP.
 
-If you are interested in assuming ownership of an SIP, send a message asking to take over, addressed to both the original author and the SIP editor. If the original author doesn't respond to the email in a timely manner, the SIP editor will make a unilateral decision (it's not like such decisions can't be reversed :)).
+If you are interested in assuming ownership of a SIP, send a message asking to take over, addressed to both the original author and the SIP editor. If the original author doesn't respond to the email in a timely manner, the SIP editor will make a unilateral decision (it's not like such decisions can't be reversed :)).
 
 ## SIP Editors
 
@@ -308,7 +308,7 @@ The current SIP editors are
 - 0age (@0age)
 - Kartik (@Slokh)
 
-If you would like to become an SIP editor, please see [SIP-2](./sip-2.md).
+If you would like to become a SIP editor, please see [SIP-2](./sip-2.md).
 
 ## SIP Editor Responsibilities
 
@@ -348,7 +348,7 @@ The `description` field in the preamble:
 
 ### SIP numbers
 
-When referring to an SIP by number, it should be written in the hyphenated form `SIP-X` where `X` is the SIP's assigned number.
+When referring to a SIP by number, it should be written in the hyphenated form `SIP-X` where `X` is the SIP's assigned number.
 
 ### RFC 2119 and RFC 8174
 
