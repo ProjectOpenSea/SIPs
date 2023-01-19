@@ -70,7 +70,6 @@ Describes a Seaport design issue, or provides general guidelines or information 
 
 All pull requests in this repository must pass automated checks before they can be automatically merged:
 
-- HTML formatting and broken links are enforced using [HTMLProofer](https://github.com/gjtorikian/html-proofer)[^1]
 - Spelling is enforced with [CodeSpell](https://github.com/codespell-project/codespell)[^1]
 - False positives sometimes occur. When this happens, please submit a PR editing [.codespell-whitelist](https://github.com/ProjectOpenSea/SIPs/blob/main/config/.codespell-whitelist).
 - Markdown best practices are checked using [markdownlint](https://github.com/DavidAnson/markdownlint)[^1]
