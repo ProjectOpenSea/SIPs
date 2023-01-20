@@ -30,7 +30,7 @@ SIP-7 requires a single variable data array as part of supplied `extraData`.
 
 Zones or contract orders that do not implement additional SIPs must support extraData version byte `0x00` in accordance with SIP-6, while zones or contract orders that implement additional SIPs with their own data requirements will require other version bytes.
 
-Zones or contract orders implementing SIP-7 MUST return a single schema with an `id` of 7 as part of the `schemas` array returned by `getSeaportMetadata()` in accordance with SIP-5. They also SHOULD return a URI linking to a description of any required documentation for the associated `metadata` parameter on the returned schema, especially if additional context data is expected by the implementing contract.
+Zones or contract orders implementing SIP-7 MUST return a schema with an `id` of 7 as part of the `schemas` array returned by `getSeaportMetadata()` in accordance with SIP-5. They also SHOULD return a URI linking to a description of any required documentation for the associated `metadata` parameter on the returned schema, especially if additional context data is expected by the implementing contract.
 
 ### Signature Verification
 
