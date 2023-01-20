@@ -59,9 +59,9 @@ The implementing contract MUST emit an event `SeaportCompatibleContractDeployed(
 
 The `name` is RECOMMENDED to be a uniquely identifiable name for the contract.
 
-The `schemas` returned MUST be in numerical order of SIP ID from smallest to largest.
-
 The implementing contract MUST adhere to [EIP-165](https://eips.ethereum.org/EIPS/eip-165) and provide a `supportsInterface` function that returns `true` for the interface of `getSeaportMetadata()`: `0x2e778efc`. The contract MUST also return `true` for `supportsInterface` of the Seaport interface being implemented.
+
+Implementing contracts MUST return a single schema ID for each additional SIP they support; they MUST NOT return any duplicate schema IDs and SHOULD return schema IDs in order from lowest to highest.
 
 ## Rationale
 
@@ -77,7 +77,7 @@ As a new standard there are no issues with backwards compatibility.
 
 ## Security Considerations
 
-There are no security considerations as this specification only proposes a metadata view function.
+Contracts implementing SIP-5 may, through error or malicious intent, signal support for SIPs that are not in fact supported, or neglect to signal support for supported SIPs. Implementing contracts may also be modified from time to time if their implementation supports it; integrators that depend on this information should analyze and monitor contracts for non-compliant behavior or modifications to the returned information.
 
 Contract authors should note until a SIP has a "final" status it may continue to change.
 

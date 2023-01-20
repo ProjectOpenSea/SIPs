@@ -15,15 +15,22 @@ _This document is currently WIP. Please suggest improvements or changes in the d
 
 ## Abstract
 
-This SIP outlines an interface for zones to provide server-signed orders. This allows marketplaces and liquidity providers to provide just-in-time signatures for fulfilling orders, which can lead to features like gasless order cancellations. This interface is proposed as a SIP to ensure fulfillers can follow a standard procedure for procuring signatures for orders.
+This SIP outlines an interface for zones or contract offerers to provide server-signed orders. This allows marketplaces and liquidity providers to provide just-in-time signatures for fulfilling orders, which can lead to features like gasless order invalidation as long as the signer refuses to provide a signature. This interface is proposed as a SIP to ensure fulfillers can follow a standard procedure for procuring signatures for orders.
 
 ## Motivation
 
-This document describes an interface for signed orders so the Seaport ecosystem can rely on a standard way to procure order signatures. Server-side signed orders can provide helpful user-facing benefits, like gasless cancellations and protection against fulfilling orders against stolen items or fraudulent activity by ceasing signature output for certain orders.
+This document describes an interface for signed orders so the Seaport ecosystem can rely on a standard way to procure order signatures. Server-side signed orders can provide helpful user-facing benefits, like gasless invalidation and protection against fulfilling orders against compromised items or fraudulent activity by ceasing signature output for certain orders.
 
 ## Specification
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 and RFC 8174.
+
+### Requirements
+SIP-7 requires a single variable data array as part of supplied `extraData`.
+
+Zones or contract orders that do not implement additional SIPs must support extraData version byte `0x00` in accordance with SIP-6, while zones or contract orders that implement additional SIPs with their own data requirements will require other version bytes.
+
+Zones or contract orders implementing SIP-7 MUST return a single schema with an `id` of 7 as part of the `schemas` array returned by `getSeaportMetadata()` in accordance with SIP-5. They also SHOULD return a URI linking to a description of any required documentation for the associated `metadata` parameter on the returned schema, especially if additional context data is expected by the implementing contract.
 
 ### Signature Verification
 
@@ -44,15 +51,14 @@ SignedOrder: [
 
 The `fulfiller` may be the zero address if the fulfillment is not restricted. If the fulfiller is not the zero address and the `fulfiller` from `validateOrder()` is not that address, it MUST revert with `error InvalidFulfiller(address expectedFulfiller, address actualFulfiller, bytes32 orderHash);`.
 
-The data for verifying a signed order is sent as part of the order's `extraData`. The `extraData` MUST be formatted according to [SIP-6](./sip-6.md) with version byte prefix `00` for variable-length `extraData`.
+The data for verifying a signed order is sent as part of the order's `extraData` and must contain at least 92 bytes. The `extraData` MUST be formatted according to [SIP-6](./sip-6.md) based on the other SIPs returned in accordance with SIP-5.
 
 | field                                               | bytes  |
 | --------------------------------------------------- | ------ |
-| SIP-6 version byte (MUST be 0x00)                   | 0-1    |
-| expected fulfiller (SHOULD be zero address for any) | 1-21   |
-| expiration timestamp (uint64)                       | 21-29  |
-| signature (MUST be EIP-2098 64 byte compact sig)    | 29-93  |
-| optional variable context data                      | 93-end |
+| expected fulfiller (SHOULD be zero address for any) | 0-20   |
+| expiration timestamp (uint64)                       | 20-28  |
+| signature (MUST be EIP-2098 64 byte compact sig)    | 28-92  |
+| optional variable context data                      | 92-end |
 
 If the signature is expired, the zone MUST revert with `error SignatureExpired(uint256 currentTimestamp, uint256 expiration, bytes32 orderHash);`
 
