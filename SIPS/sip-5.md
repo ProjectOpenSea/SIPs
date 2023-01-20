@@ -33,13 +33,16 @@ The implementing contract MUST have the following `Schema` struct and `getSeapor
  *      along with any associated metadata related to each schema.
  */
 struct Schema {
-    uint256 id; /// Seaport Improvement Proposal ID
+    uint256 id; /// Seaport Improvement Proposal (SIP) ID
     bytes metadata; /// Optional additional metadata
 }
 
 /**
- * @dev Seaport metadata for this contract, returning the contract name and
- *      supported schemas.
+ * @dev Returns Seaport metadata for this contract, returning the
+ *      contract name and supported schemas.
+ *
+ * @return name    The contract name
+ * @return schemas The supported SIPs
  */
 function getSeaportMetadata() external view returns (
     string memory name,

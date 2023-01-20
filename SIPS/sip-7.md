@@ -46,31 +46,33 @@ The `fulfiller` may be the zero address if the fulfillment is not restricted. If
 
 The data for verifying a signed order is sent as part of the order's `extraData`. The `extraData` MUST be formatted according to [SIP-6](./sip-6.md) with version byte prefix `00` for variable-length `extraData`.
 
-| field                                            | bytes  |
-| ------------------------------------------------ | ------ |
-| SIP-6 version byte: MUST be 00                   | 0-1    |
-| expected fulfiller (can be zero address for any) | 1-21   |
-| expiration timestamp (uint96)                    | 21-33  |
-| signature (EIP-2098 64 byte compact sig)         | 33-97  |
-| optional variable context data                   | 97-end |
+| field                                               | bytes  |
+| --------------------------------------------------- | ------ |
+| SIP-6 version byte (MUST be 0x00)                   | 0-1    |
+| expected fulfiller (SHOULD be zero address for any) | 1-21   |
+| expiration timestamp (uint32)                       | 21-25  |
+| signature (MUST be EIP-2098 64 byte compact sig)    | 25-89  |
+| optional variable context data                      | 89-end |
 
 If the signature is expired, the zone MUST revert with `error SignatureExpired(uint256 currentTimestamp, uint256 expiration, bytes32 orderHash);`
 
-If the recovered signer is unknown, the zone MUST revert with `error SignerNotApproved(address signer, bytes32 orderHash);`
+If the recovered signer is unknown, the zone MUST revert with `error SignerNotActive(address signer, bytes32 orderHash);`
 
-If the `extraData` is missing the zone MUST revert with `error MissingExtraData()`.
+If the `extraData` is unable to to be parsed properly due to unexpected size or format, the zone MUST revert with `error InvalidExtraData(string reason, bytes32 orderHash)`.
 
-If the `extraData` is unable to to be parsed properly due to an expected size or format, the zone MUST revert with `error InvalidExtraData()`.
+The `domainSeparator` used to recover the signer MUST check if the `block.chainid` has changed to recalculate the correct `domainSeparator` for security purposes around forks.
 
 ### Signer Authorization and Deauthorization
 
-The zone MUST provide methods for authorizing and deauthorizing signers only callable by the contract owner, `function authorizeSigner(address signer)` and `function deauthorizeSigner(address signer)`.
+The zone MUST provide methods for adding and remove signers only callable by the contract owner, `function addSigner(address signer)` and `function removeSigner(address signer)`.
 
-When a signer is added it MUST emit the event `event SignerAdded(address signer);`. When removed it MUST emit the event `event SignerRemoved(address signer);`.
+When a signer is added it MUST emit the event `event SignerAdded(address signer);`. When removed it MUST emit the event `event SignerRemoved(address signer)`.
 
-Once a signer is deauthorized, it MUST NOT be able to be reactivated, to protect against compromised keys. If a deauthorized signer is attempted to be reauthorized, the contract MUST revert with `error SignerCannotBeReauthorized()`
+Once a signer is removed, it MUST NOT be able to be reactivated, to protect against compromised keys. If a removed signer is attempted to be added, the contract MUST revert with `error SignerCannotBeReauthorized()`.
 
-If a duplicate signer is added it MUST revert with `error SignerAlreadyActive(address signer)`. If a signer not found is removed it MUST revert with `error SignerNotActive(address signer);`
+If a duplicate signer is added it MUST revert with `error SignerAlreadyActive(address signer)`. If a signer not found is removed it MUST revert with `error SignerNotActive(address signer)`.
+
+If a signer is trying to be added that is the zero address, it MUST revert with `error SignerCannotBeZeroAddress()`.
 
 Because the contract owner of the zone is in ultimate control of the zone and approving orders, it is RECOMMENDED to use a multi-signature wallet with a minimum number of confirmations for increased security.
 
@@ -78,11 +80,9 @@ Because the contract owner of the zone is in ultimate control of the zone and ap
 
 The zone MUST provide a `validateOrder()` function that adheres to the Seaport zone interface to decode the extra data and validate the signature. If the signature is from an approved signer, it MUST return the validateOrder selector to signal success.
 
-The zone MUST provide an `information()` view function, that returns the contract's EIP-712 domain separator.
+The zone MUST provide an `information()` view function, that returns the contract's EIP-712 domain separator and the API endpoint that follows the specification for API request and response payloads: `function information() external view returns (bytes32 domainSeparator, string memory apiEndpoint);`.
 
 The zone MUST provide `getSeaportMetadata()` as described in [SIP-5](./sip-5.md), that returns this SIP as a valid schema.
-
-The zone MUST provide a view function to get the API endpoint to request signatures `function getAPIEndpoint() external view returns (memory string apiEndpoint)` that MUST follow the specification for API request and response payloads.
 
 #### Signer API Request and Response Payload Format
 

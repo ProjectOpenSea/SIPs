@@ -35,6 +35,8 @@ The order `extraData` MUST be prefixed with a `version` byte that follows the fo
 
 The SIP data in the `extraData` MUST be ordered numerically based on the SIP number.
 
+Offsets, sizes, and pointers specified MUST be padded to 32 bytes.
+
 New version bytes MUST be added in a new SIP that requires this one.
 
 ## Rationale
