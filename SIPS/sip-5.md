@@ -25,9 +25,14 @@ It is helpful to know which SIPs external Seaport contracts adhere to in order t
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 and RFC 8174.
 
-The implementing contract MUST have the following `Schema` struct and `getSeaportMetadata` view function to identify the supported standards:
+The implementing contract MUST have the following `SeaportCompatibleContractDeployed` event, `Schema` struct and `getSeaportMetadata` view function to identify the supported standards:
 
 ```solidity
+/**
+ * @dev An event that is emitted when a SIP-5 compatible contract is deployed.
+ */
+event SeaportCompatibleContractDeployed();
+
 /**
  * @dev Zones and contract offerers can communicate which schemas they implement
  *      along with any associated metadata related to each schema.
@@ -49,6 +54,8 @@ function getSeaportMetadata() external view returns (
     Schema[] memory schemas
 );
 ```
+
+The implementing contract MUST emit an event `SeaportCompatibleContractDeployed()` when the contract is deployed.
 
 The `name` is RECOMMENDED to be a uniquely identifiable name for the contract.
 

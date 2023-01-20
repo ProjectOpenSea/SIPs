@@ -36,7 +36,7 @@ If the zone is implementing EIP-712 signatures, it MUST follow the below format 
 ```javascript
 SignedOrder: [
   { name: "fulfiller", type: "address" },
-  { name: "expiration", type: "uint256" },
+  { name: "expiration", type: "uint64" },
   { name: "orderHash", type: "bytes32" },
   { name: "context", type: "bytes" },
 ];
@@ -50,9 +50,9 @@ The data for verifying a signed order is sent as part of the order's `extraData`
 | --------------------------------------------------- | ------ |
 | SIP-6 version byte (MUST be 0x00)                   | 0-1    |
 | expected fulfiller (SHOULD be zero address for any) | 1-21   |
-| expiration timestamp (uint32)                       | 21-25  |
-| signature (MUST be EIP-2098 64 byte compact sig)    | 25-89  |
-| optional variable context data                      | 89-end |
+| expiration timestamp (uint64)                       | 21-29  |
+| signature (MUST be EIP-2098 64 byte compact sig)    | 29-93  |
+| optional variable context data                      | 93-end |
 
 If the signature is expired, the zone MUST revert with `error SignatureExpired(uint256 currentTimestamp, uint256 expiration, bytes32 orderHash);`
 
@@ -80,7 +80,9 @@ Because the contract owner of the zone is in ultimate control of the zone and ap
 
 The zone MUST provide a `validateOrder()` function that adheres to the Seaport zone interface to decode the extra data and validate the signature. If the signature is from an approved signer, it MUST return the validateOrder selector to signal success.
 
-The zone MUST provide an `information()` view function, that returns the contract's EIP-712 domain separator and the API endpoint that follows the specification for API request and response payloads: `function information() external view returns (bytes32 domainSeparator, string memory apiEndpoint);`.
+The zone MUST provide an `sip7Information()` view function, that returns the contract's EIP-712 domain separator and the API endpoint that follows the specification for API request and response payloads: `function sip7Information() external view returns (bytes32 domainSeparator, string memory apiEndpoint);`.
+
+The zone MUST provide a method to update the API endpoint with `function updateAPIEndpoint();`
 
 The zone MUST provide `getSeaportMetadata()` as described in [SIP-5](./sip-5.md), that returns this SIP as a valid schema.
 
@@ -114,7 +116,9 @@ The valid error message responses are as follows:
 
 The error `message` field MAY contain additional context or data.
 
-If the rate limit for the API endpoint is exceeded, it MUST return with HTTP Error 429.
+It is RECOMMENDED to add a rate limit to the API endpoint so fulfillers cannot simply continue to request many signatures for orders they do not intend to fulfill. If the rate limit for the API endpoint is exceeded, it MUST return with HTTP Error 429.
+
+The `apiEndpoint` MUST have a way of emitting an event that there is no longer intent to sign for an order. This is to help external integrators keep their order books up-to-date by invalidating orders that are no longer fulfillable. This is RECOMMENDED to be emitted only after the last vended signature for the order has expired, to avoid the order still being fulfilled.
 
 ## Rationale
 
