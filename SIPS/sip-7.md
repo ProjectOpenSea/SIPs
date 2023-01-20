@@ -26,6 +26,7 @@ This document describes an interface for signed orders so the Seaport ecosystem 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 and RFC 8174.
 
 ### Requirements
+
 SIP-7 requires a single variable data array as part of supplied `extraData`.
 
 Zones or contract orders that do not implement additional SIPs must support extraData version byte `0x00` in accordance with SIP-6, while zones or contract orders that implement additional SIPs with their own data requirements will require other version bytes.
