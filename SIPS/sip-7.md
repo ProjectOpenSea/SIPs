@@ -71,7 +71,7 @@ The `domainSeparator` used to recover the signer MUST check if the `block.chaini
 
 ### Signer Authorization and Deauthorization
 
-The zone MUST provide methods for adding and remove signers only callable by the contract owner, `function addSigner(address signer)` and `function removeSigner(address signer)`.
+The zone MUST provide methods for adding and remove signers, `function addSigner(address signer)` and `function removeSigner(address signer)`.
 
 When a signer is added it MUST emit the event `event SignerAdded(address signer);`. When removed it MUST emit the event `event SignerRemoved(address signer)`.
 
@@ -81,7 +81,7 @@ If a duplicate signer is added it MUST revert with `error SignerAlreadyActive(ad
 
 If a signer is trying to be added that is the zero address, it MUST revert with `error SignerCannotBeZeroAddress()`.
 
-Because the contract owner of the zone is in ultimate control of the zone and approving orders, it is RECOMMENDED to use a multi-signature wallet with a minimum number of confirmations for increased security.
+It is RECOMMENDED that methods for adding or removing signers or updating API information only allow an authorized owner such as a multi-signature wallet with a minimum number of confirmations for increased security.
 
 ### Zone Interface
 
@@ -98,19 +98,32 @@ The zone MUST provide `getSeaportMetadata()` as described in [SIP-5](./sip-5.md)
 The `apiEndpoint` MUST accept a JSON payload of:
 
 ```json
-{ "orders": [{}, {}], "fulfiller": "0x..." }
-```
-
-The `apiEndpoint` MUST respond with a valid response containing formatted orders and/or errors of:
-
-```json
 {
-  "orders": [{}, {}],
-  "errors": { "${orderHash}": { "error": "", "message": "" } }
+  "chainId": "0x01",
+  "marketplaceContract": "0x...",
+  "orderHash": "0x...",
+  "fulfiller": "0x..."
 }
 ```
 
-The returned orders MUST include `extraData` formatted with the data that would pass validation in the zone.
+The `apiEndpoint` MUST respond with a valid response for the order:
+
+```json
+{
+  "extraData": "0x..."
+}
+```
+
+OR an error:
+
+```json
+{
+  "error": "UnknownOrder",
+  "message": "The order cannot be found"
+}
+```
+
+The returned extraData MUST pass validation on the zone when supplied as the order extraData
 
 The valid error message responses are as follows:
 
@@ -137,11 +150,11 @@ As a newly proposed standard there is no issue with backwards compatibility.
 
 ## Test Cases
 
-(WIP) Test cases are located in the Seaport repository at [`test/zones/SignedZone.spec.ts`](https://github.com/ProjectOpenSea/seaport/blob/9c91cf0a1f4a42c42ca093c16f4f907661ae5502/test/zones/SignedZone.spec.ts).
+Test cases are located in the Seaport repository at [`test/zones/SignedZone.spec.ts`](https://github.com/ProjectOpenSea/seaport/blob/024dcc5cd70231ce6db27b4e12ea6fb736f69b06/test/zones/SignedZone.spec.ts).
 
 ## Reference Implementation
 
-(WIP) The reference implementation can be found in the Seaport repository at [`contracts/zones/SignedZone.ts`](https://github.com/ProjectOpenSea/seaport/blob/9c91cf0a1f4a42c42ca093c16f4f907661ae5502/contracts/zones/SignedZone.ts).
+The reference implementation can be found in the Seaport repository at [`contracts/zones/SignedZone.sol`](https://github.com/ProjectOpenSea/seaport/blob/024dcc5cd70231ce6db27b4e12ea6fb736f69b06/contracts/zones/SignedZone.sol).
 
 ## Security Considerations
 
