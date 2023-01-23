@@ -95,7 +95,7 @@ The zone MUST provide `getSeaportMetadata()` as described in [SIP-5](./sip-5.md)
 
 If the zone allows for active signers to interact with the zone, it is RECOMMENDED for the zone to provide `function getActiveSigners() external view returns (address[] memory signers);` so signers with active permissions can be more easily tracked and queried.
 
-#### Signer API Request and Response Payload Format
+### Signer API Request and Response Payload Format
 
 The `apiEndpoint` MUST accept a JSON payload of:
 
