@@ -31,7 +31,7 @@ SIP-7 requires a single variable data array as part of supplied `extraData`.
 
 Zones or contract orders that do not implement additional SIPs must support extraData version byte `0x00` in accordance with SIP-6, while zones or contract orders that implement additional SIPs with their own data requirements will require other version bytes.
 
-Zones or contract orders implementing SIP-7 MUST return a schema with an `id` of 7 as part of the `schemas` array returned by `getSeaportMetadata()` in accordance with SIP-5. They also SHOULD return a URI linking to a description of any required documentation for the associated `metadata` parameter on the returned schema, especially if additional context data is expected by the implementing contract.
+Zones or contract orders implementing SIP-7 MUST return a schema with an `id` of 7 as part of the `schemas` array returned by `getSeaportMetadata()` in accordance with SIP-5. They also MUST return an associated `metadata` parameter on the returned schema, decoded as `(bytes32 domainSeparator, string memory apiEndpoint, uint256[] memory substandards, string memory documentationURI)`.
 
 ### Signature Verification
 
@@ -54,12 +54,12 @@ The `fulfiller` may be the zero address if the fulfillment is not restricted. If
 
 The data for verifying a signed order is sent as part of the order's `extraData` and must contain at least 92 bytes. The `extraData` MUST be formatted according to [SIP-6](./sip-6.md) based on the other SIPs returned in accordance with SIP-5.
 
-| field                                               | bytes  |
-| --------------------------------------------------- | ------ |
-| expected fulfiller (SHOULD be zero address for any) | 0-20   |
-| expiration timestamp (uint64)                       | 20-28  |
-| signature (MUST be EIP-2098 64 byte compact sig)    | 28-92  |
-| optional variable context data                      | 92-end |
+| field                                                | bytes  |
+| ---------------------------------------------------- | ------ |
+| expected fulfiller (SHOULD be zero address for any)  | 0-20   |
+| expiration timestamp (uint64)                        | 20-28  |
+| signature (MUST be EIP-2098 64 byte compact sig)     | 28-92  |
+| variable context data (format based on substandards) | 92-end |
 
 If the signature is expired, the zone MUST revert with `error SignatureExpired(uint256 currentTimestamp, uint256 expiration, bytes32 orderHash);`
 
@@ -87,13 +87,30 @@ If methods for adding and remove signers are incorporated into the zone, it is R
 
 The zone MUST provide a `validateOrder()` function that adheres to the Seaport zone interface to decode the extra data and validate the signature. If the signature is from an approved signer, it MUST return the `validateOrder` selector to signal success.
 
-The zone MUST provide an `sip7Information()` view function, that returns the contract's EIP-712 domain separator and the API endpoint that follows the specification for API request and response payloads: `function sip7Information() external view returns (bytes32 domainSeparator, string memory apiEndpoint, uint256[] memory substandards)`.
+The zone SHOULD provide an `sip7Information()` view function, that returns the contract's EIP-712 domain separator and the API endpoint that follows the specification for API request and response payloads: `function sip7Information() external view returns (bytes32 domainSeparator, string memory apiEndpoint, uint256[] memory substandards, string memory documentationURI)`. If included, this information MUST match the information returned as metadata by the associated `getSeaportMetadata()` schema. Inclusion of this view function is strongly recommended for improved compatibility with existing tooling, as otherwise custom decoding of the metadata returned by SIP-6 will be required.
 
 If the zone is able to update the API endpoint directly, it is RECOMMENDED to utilize `function updateAPIEndpoint()` for that purpose.
 
-The zone MUST provide `getSeaportMetadata()` as described in [SIP-5](./sip-5.md), that returns this SIP as a valid schema.
+It is RECOMMENDED that the zone return a URI for `documentationURI` describing the behavior of the zone in question in more detail; the zone MAY return an empty string if no documentation is required or otherwise available.
+
+The zone MUST provide `getSeaportMetadata()` as described in [SIP-5](./sip-5.md), that returns this SIP as a valid schema and metadata encoded as `(bytes32 domainSeparator, string memory apiEndpoint, uint256[] memory substandards, string memory documentationURI)`.
 
 If the zone allows for active signers to interact with the zone, it is RECOMMENDED for the zone to provide `function getActiveSigners() external view returns (address[] memory signers);` so signers with active permissions can be more easily tracked and queried.
+
+### Substandards
+
+The `context` argument will be populated based on the "substandards" specified by the zone; these substandards will be encoded in accordance with SIP-6 versioning with the assumption that all necessary data is to be treated as "variable" data arrays. The ordering for each encoded data segment included as part of context, supplied as part of the server API request, and returned as part of the server API response will be dictated by the order that the zone returns the substandard IDs.
+
+Initial substandards include:
+| substandard ID | description                                               | decoding scheme                                 | substandard request data supplied to API                                            | substandard response data returned from API                                                       |
+| -------------- | --------------------------------------------------------- | ----------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| 1              | required identifer for first returned received item       | `(uint256)`                                     | {"requestedIdentifier": "123..."}                                                   | {"requiredIdentifier": "123..."}                                                                  |
+| 2              | required initial "tip"                                    | `((uint8, address, uint256, uint256, address))` | {"requestedTip": <null || {"itemType": "1", "token": "abc", ...}>}                  | {"requiredTip": {"itemType": "1", "token": "abc", ...}}                                           |
+| 3              | required hash of full ReceivedItem array                  | `(bytes32)`                                     | {"requestedRecievedItems": <null || [{"itemType": "1", "token": "abc", ...}, ...]>} | {"requiredRecievedItems": [{"itemType": "1", ...}, ...], "requiredReceivedItemsHash": "0xabc..."} |
+| 4              | required order hashes included as part of fulfillment     | `(bytes32[])`                                   | {"requestedIncludedOrderHashes": <null || ["0xabc...", ...]>}                       | {"requiredIncludedOrderHashes": ["0xabc...", ...]}                                                |
+| 5              | required order hashes NOT included as part of fulfillment | `(bytes32[])`                                   | {"requestedExcludedOrderHashes": <null || ["0xabc...", ...]>}                       | {"requiredExcludedOrderHashes": ["0xabc...", ...]}                                                |
+
+Additional substandards may be specified in subsequent SIPs that inherit SIP-7.
 
 #### Signer API Request and Response Payload Format
 
@@ -104,15 +121,20 @@ The `apiEndpoint` MUST accept a JSON payload of:
   "chainId": "0x01",
   "marketplaceContract": "0x...",
   "orderHash": "0x...",
-  "fulfiller": "0x..."
+  "fulfiller": "0x...",
+  "substandardRequests": ["..."]
 }
 ```
+
+`substandardRequests` MUST be an array of objects where each object is formatted in accordance with the appropriate API requests for the specified substandard with the corresponding index.
+
 
 The `apiEndpoint` MUST respond with a valid response for the order:
 
 ```json
 {
-  "extraData": "0x..."
+  "extraDataComponent": "0x...",
+  "substandardResponses": ["..."]
 }
 ```
 
@@ -125,20 +147,25 @@ OR an error:
 }
 ```
 
-The returned extraData MUST pass validation on the zone when supplied as the order extraData
+`substandardResponses` MUST be an array of objects where each object is formatted in accordance with the appropriate API responses for the specified substandard with the corresponding index.
+
+The returned `extraDataComponent` MUST pass validation on the zone when supplied as part of the order's extraData in accordance with SIP-6. Note that for zones that implement SIP-7 and no other SIPs that require data components, the zone MUST pass validation on the zone with an SIP-6 version byte of `0x00` followed by the returned `extraDataComponent` bytes array.
 
 The valid error message responses are as follows:
 
-| error                    | reason                                                                                                      |
-| ------------------------ | ----------------------------------------------------------------------------------------------------------- |
-| UnknownOrder             | If the order is not known to the signer                                                                     |
-| UnknownZone              | If the zone is not known to the signer                                                                      |
-| SignaturesNoLongerVended | If the signer is no longer vending signatures for the order, for example it has been fulfilled or cancelled |
-| FulfillerRequired        | If the signer is requiring the order must require a specific fulfiller                                      |
+| error                    | reason                                                                                                       |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| UnknownOrder             | If the order is not known to the signer                                                                      |
+| UnknownZone              | If the zone is not known to the signer                                                                       |
+| SignaturesNoLongerVended | If the signer is no longer vending signatures for the order, for example it has been fulfilled or cancelled  |
+| FulfillerRequired        | If the signer is requiring the order must require a specific fulfiller or the fulfiller is not authenticated |
+| SubstandardNotValid      | If the signer does not receive appropriate input data for a required substandard or cannot meet requirements |
 
 The error `message` field MAY contain additional context or data.
 
 It is RECOMMENDED to add a rate limit to the API endpoint so fulfillers cannot simply continue to request many signatures for orders they do not intend to fulfill. If the rate limit for the API endpoint is exceeded, it MUST return with HTTP Error 429.
+
+If a fulfiller is specified, the caller MUST have first authenticated with the API via EIP-4361 and MUST provide an associated token as part of the header of the request. The server MUST reject the request with a `FulfillerRequired` error if a valid token is not supplied.
 
 The `apiEndpoint` MUST have a way of emitting an event that there is no longer intent to sign for an order. This is to help external integrators keep their order books up-to-date by invalidating orders that are no longer fulfillable. This is RECOMMENDED to be emitted only after the last vended signature for the order has expired, to avoid the order still being fulfilled.
 
