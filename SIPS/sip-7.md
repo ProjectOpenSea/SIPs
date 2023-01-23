@@ -2,7 +2,7 @@
 sip: 7
 title: Zone Interface for Server-Signed Orders
 description: A consistent zone interface for signed Seaport orders.
-author: Ryan Ghods (@ryanio)
+author: Ryan Ghods (@ryanio), 0age (@0age)
 discussions-to: https://github.com/ProjectOpenSea/SIPs/discussions/5
 status: Draft
 type: Standards
