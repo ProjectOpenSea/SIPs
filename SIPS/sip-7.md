@@ -2,7 +2,7 @@
 sip: 7
 title: Interface for Server-Signed Orders
 description: A consistent interface for Seaport zones and contract offerers that incorporate third-party signatures.
-author: Ryan Ghods (@ryanio), 0age (@0age)
+author: 0age (@0age), Ryan Ghods (@ryanio)
 discussions-to: https://github.com/ProjectOpenSea/SIPs/discussions/5
 status: Draft
 type: Standards
@@ -50,7 +50,7 @@ SignedOrder: [
 ];
 ```
 
-The `fulfiller` may be the zero address if the fulfillment is not restricted. If the fulfiller is not the zero address and the `fulfiller` from `validateOrder()` is not that address, it MUST revert with `error InvalidFulfiller(address expectedFulfiller, address actualFulfiller, bytes32 orderHash);`.
+The `fulfiller` MAY be the zero address if the fulfillment is not restricted. If the fulfiller is not the zero address and the `fulfiller` from `validateOrder()` is not that address, it MUST revert with `error InvalidFulfiller(address expectedFulfiller, address actualFulfiller, bytes32 orderHash);`.
 
 The data for verifying a signed order is sent as part of the order's `extraData` and must contain at least 92 bytes. The `extraData` MUST be formatted according to [SIP-6](./sip-6.md) based on the other SIPs returned in accordance with SIP-5.
 
@@ -104,15 +104,15 @@ If the zone or contract offerer allows for active signers to interact with the z
 The `context` argument will be populated based on the "substandards" specified by the zone or contract offerer; these substandards will be encoded in accordance with SIP-6 versioning with the assumption that all necessary data is to be treated as "variable" data arrays. The ordering for each encoded data segment included as part of context, supplied as part of the server API request, and returned as part of the server API response will be dictated by the order that the zone or contract offerer returns the substandard IDs.
 
 Initial substandards include:
-| substandard ID | description                                               | decoding scheme                                 | substandard request data supplied to API                                            | substandard response data returned from API                                                       |
+| substandard ID | description | decoding scheme | substandard request data supplied to API | substandard response data returned from API |
 | -------------- | --------------------------------------------------------- | ----------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| 1              | required identifer for first returned received item       | `(uint256)`                                     | {"requestedIdentifier": "123..."}                                                   | {"requiredIdentifier": "123..."}                                                                  |
-| 2              | required initial "tip"                                    | `((uint8, address, uint256, uint256, address))` | {"requestedTip": <null || {"itemType": "1", "token": "abc", ...}>}                  | {"requiredTip": {"itemType": "1", "token": "abc", ...}}                                           |
-| 3              | required hash of full ReceivedItem array                  | `(bytes32)`                                     | {"requestedRecievedItems": <null || [{"itemType": "1", "token": "abc", ...}, ...]>} | {"requiredRecievedItems": [{"itemType": "1", ...}, ...], "requiredReceivedItemsHash": "0xabc..."} |
-| 4              | required order hashes included as part of fulfillment     | `(bytes32[])`                                   | {"requestedIncludedOrderHashes": <null || ["0xabc...", ...]>}                       | {"requiredIncludedOrderHashes": ["0xabc...", ...]}                                                |
-| 5              | required order hashes NOT included as part of fulfillment | `(bytes32[])`                                   | {"requestedExcludedOrderHashes": <null || ["0xabc...", ...]>}                       | {"requiredExcludedOrderHashes": ["0xabc...", ...]}                                                |
+| 1 | required identifier for first returned received item | `(uint256)` | `{"requestedIdentifier": "123..."}` | `{"requiredIdentifier": "123..."}` |
+| 2 | required initial "tip" | `(uint8, address, uint256, uint256, address)` | `{"requestedTip": null OR {"itemType": "1", "token": "abc", ...}}` | `{"requiredTip": {"itemType": "1", "token": "abc", ...}}` |
+| 3 | required hash of full ReceivedItem array | `(bytes32)` | `{"requestedReceivedItems": null OR [{"itemType": "1", "token": "abc", ...}, ...]}` | `{"requiredReceivedItems": [{"itemType": "1", ...}, ...], "requiredReceivedItemsHash": "0xabc..."}` |
+| 4 | required order hashes included as part of fulfillment | `(bytes32[])` | `{"requestedIncludedOrderHashes": null OR ["0xabc...", ...]}` | `{"requiredIncludedOrderHashes": ["0xabc...", ...]}` |
+| 5 | required order hashes NOT included as part of fulfillment | `(bytes32[])` | `{"requestedExcludedOrderHashes": null OR ["0xabc...", ...]}` | `{"requiredExcludedOrderHashes": ["0xabc...", ...]}` |
 
-Additional substandards may be specified in subsequent SIPs that inherit SIP-7.
+Additional substandards MAY be specified in subsequent SIPs that inherit SIP-7.
 
 ### Signer API Request and Response Payload Format
 
@@ -129,7 +129,6 @@ The `apiEndpoint` MUST accept a JSON payload of:
 ```
 
 `substandardRequests` MUST be an array of objects where each object is formatted in accordance with the appropriate API requests for the specified substandard with the corresponding index.
-
 
 The `apiEndpoint` MUST respond with a valid response for the order:
 
