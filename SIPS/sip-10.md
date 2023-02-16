@@ -3,7 +3,7 @@ sip: 10
 title: Interface for Seaport-extended NFTs
 description: A consistent interface for NFTs that also operate as Seaport contract offerers.
 author: 0age (@0age)
-discussions-to: https://github.com/ProjectOpenSea/SIPs/discussions/
+discussions-to: https://github.com/ProjectOpenSea/SIPs/discussions/12
 status: Draft
 type: Standards
 category (*only required for Standards Track): Interface
