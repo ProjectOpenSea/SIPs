@@ -96,7 +96,15 @@ A reference implementation implementing substandards 0 and 1 can be found in the
 
 ## Security Considerations
 
-Security considerations will be provided as this SIP is further developed.
+Transfer restrictions enforced by NFTs implementng this SIP can still be circumvented in a number of ways, albeit with significant limitations to the efficiency or safety of the experience of buying and selling the NFTs:
+- Tokens can still be "wrapped" by depositing them for a one-time fee, then buying and selling the wrapper. These wrappers can also be counterfactual contracts, limiting the ability to detect that the NFT is held in a wrapper and not an EOA.
+- Tokens can still be directly transferred by the owner in most NFT implementations, which enables trusted escrow agreements or trustless escrow using counterfactual contract schemes.
+- If the fee derivation mechanic is dependent on the sale price of the NFT, the listing associated with that sale can require that a secondary listing be fulfilled as a precondition for the primary listing, and utilize a much lower amount for the sale price for the primary listing along with a larger payment on the secondary listing.
+- Finally, private keys themselves can be bought and sold, circumventing the requirement to buy and sell the underlying NFT at all; key-splitting or secret-sharing schemes can be leveraged to provide some additional security guarantees.
+
+These vectors for circumvention and their respective limitations should be considered by NFT creators before deciding to implement this standard.
+
+Another important note is that implementation of this SIP naturally restricts what operators may transfer the underlying NFT, which can damage composability. While Seaport (and Seaport forks or analogues that implement the contract offerer interface) can still accomplish many of the same actions via native integrations, adapters, or other techniques, there is still the danger that other protocols may be incompatible with NFTs that implement this SIP. NFT creators should consider the relative tradeoffs carefully and potentially include mechanisms for adding and removing allowed operators or deactivating the transfer restriction mechanic entirely.
 
 ## Copyright
 
