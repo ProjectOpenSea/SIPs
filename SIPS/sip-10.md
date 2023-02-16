@@ -58,8 +58,9 @@ The NFT contract MUST provide `getSeaportMetadata()` as described in [SIP-5](./s
 The `context` argument will be populated based on the "substandards" specified by the NFT contract offerer; these substandards will be encoded in accordance with SIP-6 versioning with the assumption that all necessary data is to be treated as "variable" data arrays. The ordering for each encoded data segment included as part of context, supplied as part of the server API request, and returned as part of the server API response will be dictated by the order that the NFT contract offerer returns the substandard IDs.
 
 Initial substandards include:
-| substandard ID | description | decoding scheme | notes
-| -------------- | --------------------------------------------------------- | ----------------------------------------------- |
+
+| substandard ID | description | decoding scheme | notes |
+| -- | ---------- | --------------------------------------------------------- | ----------------------------------------------- |
 | 0 | transfer activation for a single, specific unminted token | n/a | token represented as a single minimumReceived item |
 | 1 | transfer activation for a single, specific minted token | `(uint256)` | token represented by context, minimumReceived empty |
 | 2 | transfer activation for multiple, specific minted tokens | `(uint256[])` | tokens represented by context, minimumReceived empty |
