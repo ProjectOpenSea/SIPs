@@ -47,6 +47,8 @@ If the `extraData` component is unable to to be parsed properly due to unexpecte
 
 NFT contracts implementing SIP-10 MUST provide `generateOrder` and `ratifyOrder` functions that adheres to the Seaport contract offerer interface, where at least one of the specified functions will decode the extra data component. If the given substandard activates transferability (including the ability to mint currently unminted tokens), the implementing NFT contract MUST activate transferability of the given token(s) in `generateOrder` and MUST deactivate transferability of the given token(s) in `ratifyOrder`.
 
+NFT contracts also MUST implement a `previewOrder` view function that adheres to the Seaport contract offerer interface and that will return the required `consideration` array for the requested input parameters and chosen substandard; this array will then need to be supplied as part of the associated contract order as the `maximumSpent` array.
+
 The NFT contract SHOULD provide a `canTransfer(uint256 tokenId) external view returns (bool isTransferable)` function that returns the current transferable status of a given tokenID. If included, this information MUST match the underlying transferable status of the given token. Inclusion of this view function is strongly recommended for improved compatibility with external integrations.
 
 It is RECOMMENDED that the NFT contract return a URI for `documentationURI` describing the behavior of the contract in question in more detail; the contract offerer MAY return an empty string if no documentation is required or otherwise available.
@@ -90,7 +92,7 @@ Test cases are still under development.
 
 ## Reference Implementation
 
-A reference implementation implementing substandards 0 and 1 can be found in the Seaport repository (currently contained on the `creator-earnings-enforcer` working branch) at [`contracts/contractOfferers/SeaportExtendedNFT.sol`](https://github.com/ProjectOpenSea/seaport/blob/53ee96cbd995e9b379c4eab1f9399e0bf55ed256/contracts/contractOfferers/SeaportExtendedNFT.sol).
+A reference implementation implementing substandards 0 and 1 can be found in the Seaport repository (currently contained on the `creator-earnings-enforcer` working branch) at [`contracts/contractOfferers/SeaportExtendedNFT.sol`](https://github.com/ProjectOpenSea/seaport/blob/6c4466eebd8a0434c13bd2f380f8c246afdcbfc6/contracts/contractOfferers/SeaportExtendedNFT.sol).
 
 ## Security Considerations
 
