@@ -92,7 +92,7 @@ Test cases are still under development.
 
 ## Reference Implementation
 
-A reference implementation implementing substandards 0 and 1 can be found in the Seaport repository (currently contained on the `creator-earnings-enforcer` working branch) at [`contracts/contractOfferers/SeaportExtendedNFT.sol`](https://github.com/ProjectOpenSea/seaport/blob/6c4466eebd8a0434c13bd2f380f8c246afdcbfc6/contracts/contractOfferers/SeaportExtendedNFT.sol).
+A reference implementation implementing substandards 0 and 1 can be found in the Seaport repository (currently contained on the `creator-earnings-enforcer` working branch) at [`contracts/contractOfferers/SeaportExtendedNFT.sol`](https://github.com/ProjectOpenSea/seaport/blob/8f799ca0e540eabac23a9b6b253cf314b9e0b2f8/contracts/contractOfferers/SeaportExtendedNFT.sol).
 
 ## Security Considerations
 
