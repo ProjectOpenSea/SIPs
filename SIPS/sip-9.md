@@ -8,7 +8,7 @@ status: Draft
 type: Standards
 category (*only required for Standards Track): Interface
 created: <date created on, in ISO 8601 (yyyy-mm-dd) format>
-requires (*optional): 5, 6
+requires (*optional): [5](./sip-5.md), [6](./sip-6.md)
 ---
 
 This is the suggested template for new SIPs.

@@ -8,7 +8,7 @@ status: Draft
 type: Standards
 category (*only required for Standards Track): Interface
 created: 2023-01-12
-requires (*optional): 5
+requires (*optional): [5](./sip-5.md)
 ---
 
 _This document is currently WIP. Please suggest improvements or changes in the discussions-to link above._

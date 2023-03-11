@@ -7,7 +7,7 @@ discussions-to:
 status: Living
 type: Meta
 created: 2022-12-22
-requires: 1
+requires: [1](./sip-1.md)
 ---
 
 ## Abstract

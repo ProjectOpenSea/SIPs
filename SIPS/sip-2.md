@@ -7,7 +7,7 @@ discussions-to:
 status: Living
 type: Informational
 created: 2022-12-21
-requires: 1
+requires: [1](./sip-1.md)
 ---
 
 ## Abstract
