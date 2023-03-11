@@ -1,15 +1,7 @@
----
-sip: 10
-title: Interface for Seaport-extended NFTs
-description: A consistent interface for NFTs that also operate as Seaport contract offerers.
-author: 0age (@0age)
-discussions-to: https://github.com/ProjectOpenSea/SIPs/discussions/12
-status: Draft
-type: Standards
-category (*only required for Standards Track): Interface
-created: 2023-2-16
-requires (*optional): "[5](https://github.com/ProjectOpenSea/SIPs/blob/main/SIPS/sip-5.md)", https://github.com/ProjectOpenSea/SIPs/blob/main/SIPS/sip-6.md
----
+| SIP | Title | Description | Author | Discussions-to | Status | Type | Category (only required for Standards Track) | Created | Requires (optional) |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 10 | Interface for Seaport-extended NFTs | A consistent interface for NFTs that also operate as Seaport contract offerers. | 0age (@0age) | https://github.com/ProjectOpenSea/SIPs/discussions/12 | Draft | Standards | Interface | 2023-2-16 | [5](./sip-5.md), [6](./sip-6.md) |
+
 
 _This document is currently WIP. Please suggest improvements or changes in the discussions-to link above._
 
