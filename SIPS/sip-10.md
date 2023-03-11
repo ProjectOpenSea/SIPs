@@ -8,7 +8,7 @@ status: Draft
 type: Standards
 category (*only required for Standards Track): Interface
 created: 2023-2-16
-requires (*optional): [5](https://github.com/ProjectOpenSea/SIPs/blob/main/SIPS/sip-5.md), https://github.com/ProjectOpenSea/SIPs/blob/main/SIPS/sip-6.md
+requires (*optional): "[5](https://github.com/ProjectOpenSea/SIPs/blob/main/SIPS/sip-5.md)", https://github.com/ProjectOpenSea/SIPs/blob/main/SIPS/sip-6.md
 ---
 
 _This document is currently WIP. Please suggest improvements or changes in the discussions-to link above._
