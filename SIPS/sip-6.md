@@ -35,8 +35,8 @@ If `extraData` is supplied as part of a SIP-6-compliant order, it MUST be prefix
 
 | version byte | description                                                  | decoding scheme                                 | fixed data hashing scheme                                                                   |
 | ------------ | ------------------------------------------------------------ | ----------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| 0x00         | single variable data array                                   | `abi.decode(extraData[1:], (bytes))`            | n/a                                                                                         |
-| 0x01         | single fixed data array                                      | `abi.decode(extraData[1:], (bytes))`            | `keccak256(fixedDataArray)`                                                                 |
+| 0x00         | single variable data array                                   | `extraData[1:]` (no offset / length)            | n/a                                                                                         |
+| 0x01         | single fixed data array                                      | `extraData[1:]` (no offset / length)            | `keccak256(fixedDataArray)`                                                                 |
 | 0x02         | single variable data array and single fixed data array       | `abi.decode(extraData[1:], (bytes, bytes))`     | `keccak256(fixedDataArray)`                                                                 |
 | 0x03         | multiple variable data arrays                                | `abi.decode(extraData[1:], (bytes[]))`          | n/a                                                                                         |
 | 0x04         | multiple fixed data arrays                                   | `abi.decode(extraData[1:], (bytes[]))`          | `keccak256(abi.encode(keccak256(fixedDataArrays[0]), keccak256(fixedDataArrays[1]), ...]))` |
