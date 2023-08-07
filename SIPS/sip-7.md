@@ -103,7 +103,7 @@ If the zone or contract offerer allows for active signers to interact with the z
 
 The `context` argument will be populated based on the "substandards" specified by the zone or contract offerer; these substandards will be encoded in accordance with SIP-6 versioning with the assumption that all necessary data is to be treated as "variable" data arrays. The ordering for each encoded data segment included as part of context, supplied as part of the server API request, and returned as part of the server API response will be dictated by the order that the zone or contract offerer returns the substandard IDs.
 
-If a substandard is being used the context MUST start with a SIP-7 byte identifying the substandard ID below. The byte SHOULD be 1-indexed, but for gas efficiency reasons, 00 MAY also be used as an alias to reference substandard ID 1. If no substandard is used there MUST be no version byte or extra data provided.
+If a substandard is being used the context MUST start with a SIP-7 byte identifying the substandard ID below. The byte SHOULD be 1-indexed, but for gas efficiency reasons, 00 MAY also be used as an alias to reference substandard ID 1. If no substandard is used there MUST be no substandard byte or additional substandard data provided.
 
 Initial substandards include:
 | substandard ID | description | decoding scheme | substandard request data supplied to API | substandard response data returned from API |
