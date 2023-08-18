@@ -1,9 +1,9 @@
 ---
 sip: 14
 title: Redeemable Contract Offerer
-description: A Seaport Contract Offerer that uses ERC-7NNN Dynamic Traits to enable onchain redemptions
+description: A Seaport Contract Offerer that uses ERC-7500 Dynamic Traits to enable onchain redemptions
 author: Ryan Ghods (@ryanio), 0age (@0age)
-discussions-to: <URL>
+discussions-to: https://github.com/ProjectOpenSea/SIPs/discussions/18
 status: Draft
 type: Standards Track
 category: ERC
@@ -13,11 +13,11 @@ requires: 5
 
 ## Abstract
 
-This specification proposes a standard for a Seaport Contract Offerer that uses ERC-7NNN Dynamic Traits to enable onchain redemptions. This also allows a Seaport zone to use the Dynamic Traits standard to ensure redemptions cannot be frontrun when NFTs are listed to be sold with a guarantee of certain traits.
+This specification proposes a standard for a Seaport Contract Offerer that uses ERC-7500 Dynamic Traits to enable onchain redemptions. This also allows a Seaport zone to use the Dynamic Traits standard to ensure redemptions cannot be frontrun when NFTs are listed to be sold with a guarantee of certain traits.
 
 ## Motivation
 
-Traits and metadata for non-fungible and semi-fungible tokens are often stored offchain. This makes it difficult to query and mutate these values in contract code. ERC-7NNN Dynamic Traits brings certain traits onchain, to enable contracts like this Redeemable Contract Offerer to use them to create onchain token and offchain product redemptions.
+Traits and metadata for non-fungible and semi-fungible tokens are often stored offchain. This makes it difficult to query and mutate these values in contract code. ERC-7500 Dynamic Traits brings certain traits onchain, to enable contracts like this Redeemable Contract Offerer to use them to create onchain token and offchain product redemptions.
 
 ## Specification
 
@@ -89,7 +89,7 @@ Any token may be used in the RedeemableParams `consideration`. This will ensure 
 
 ### Dynamic traits
 
-The contract offerer MUST include the ERC-7NNN Dynamic Traits interface itself in case the campaign is a trait redemption and the specified token does not implement Dynamic Traits itself. According to the Dynamic Traits specification for "registry" functionality, the first 20 bytes of the `traitKey` should be the contract address to associate the proper `tokenId`.
+The contract offerer MUST include the ERC-7500 Dynamic Traits interface itself in case the campaign is a trait redemption and the specified token does not implement Dynamic Traits itself. According to the Dynamic Traits specification for "registry" functionality, the first 20 bytes of the `traitKey` should be the contract address to associate the proper `tokenId`.
 
 ### Signer
 
@@ -259,7 +259,7 @@ The reference implementation for the Redeemable Contract Offerer can be found at
 
 ## Security Considerations
 
-Tokens must properly implement EIP-7NNN Dynamic Traits and allow the Redeemable Contract Offerer to use the `setTrait` method to enforce the full security of the standard.
+Tokens must properly implement EIP-7500 Dynamic Traits and allow the Redeemable Contract Offerer to use the `setTrait` method to enforce the full security of the standard.
 
 For tokens to be minted as part of the params `offer`, the `mintRedemption` function contained as part of `IRedemptionMintable` MUST be permissioned and ONLY allowed to be called by redeemable contract offerers specified by address.
 

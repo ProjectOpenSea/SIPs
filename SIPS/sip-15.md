@@ -1,9 +1,9 @@
 ---
 sip: 15
 title: Interface for Dynamic Traits Enforcement
-description: A Seaport interface for specifying and enforcing values of ERC-7NNN Dynamic Traits.
+description: A Seaport interface for specifying and enforcing values of ERC-7500 Dynamic Traits.
 author: Ryan Ghods (@ryanio), James Wenzel (emo.eth)
-discussions-to: https://github.com/ProjectOpenSea/SIPs/discussions/
+discussions-to: https://github.com/ProjectOpenSea/SIPs/discussions/19
 status: Draft
 type: Standards
 category (*only required for Standards Track): Interface
@@ -13,11 +13,11 @@ requires (*optional): 5, 6
 
 ## Abstract
 
-This SIP defines a standard interface for Seaport zones and contract offerers to specify and enforce ERC-7NNN Dynamic Traits during order fulfillment.
+This SIP defines a standard interface for Seaport zones and contract offerers to specify and enforce ERC-7500 Dynamic Traits during order fulfillment.
 
 ## Motivation
 
-Token metadata is typically specified at offchain locations but with ERC-7NNN Dynamic Traits certain metadata values can be queried onchain. This can help protect NFTs against frontrunning during purchase where the value of traits changes the expected value of the NFT. With this SIP, zones and contract offerers can enforce the value of certain traits at time of order fulfillment.
+Token metadata is typically specified at offchain locations but with ERC-7500 Dynamic Traits certain metadata values can be queried onchain. This can help protect NFTs against frontrunning during purchase where the value of traits changes the expected value of the NFT. With this SIP, zones and contract offerers can enforce the value of certain traits at time of order fulfillment.
 
 ## Specification
 
@@ -89,7 +89,7 @@ The reference implementation can be found in the [Dynamic Traits repository](htt
 
 ## Security Considerations
 
-- For the zone to work as intended tokens must properly implement ERC-7NNN Dynamic Traits.
+- For the zone to work as intended tokens must properly implement ERC-7500 Dynamic Traits.
 
 ## Copyright
 
