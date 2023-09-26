@@ -29,7 +29,7 @@ The contract offerer MUST have the following interface and MUST return `true` fo
 interface IRedeemableContractOfferer {
   /* Events */
   event CampaignUpdated(uint256 indexed campaignId, CampaignParams params, string URI);
-  event Redemption(uint256 indexed campaignId, bytes32 redemptionHash);
+  event Redemption(uint256 indexed campaignId, uint256 requirementsIndex, bytes32 redemptionHash);
 
   /* Structs */
   struct CampaignParams {
@@ -43,7 +43,7 @@ interface IRedeemableContractOfferer {
   struct CampaignRequirements {
       OfferItem[] offer; // items to be minted, can be empty for offchain redeemable
       ConsiderationItem[] consideration; // items transferring to recipient
-      TraitRedemption[] traitRedemptions; // the required traitRedemptions
+      TraitRedemption[] traitRedemptions; // the trait redemptions
   }
   struct TraitRedemption {
     uint8 substandard;
@@ -89,22 +89,22 @@ Any token may be used in the RedeemableParams `consideration`. This will ensure 
 
 A signer MAY be specified to provide a signature to process the redemption. If the signer is NOT the null address, the signature MUST recover to the signer address via EIP-712 or EIP-1271.
 
-The EIP-712 struct for signing MUST be as follows: `SignedRedeem(address owner,address redeemedToken, uint256[] tokenIds,uint256 requirementsIndex,bytes32 redemptionHash, uint256 salt)"`
+The EIP-712 struct for signing MUST be as follows: `SignedRedeem(address owner,address redeemedToken, uint256[] tokenIds,uint256 campaignId,uint256 requirementsIndex, bytes32 redemptionHash, uint256 salt)"`
 
 ### AdvancedOrder extraData
 
 When interacting with the contract offerer via Seaport, the extraData/context layout for the AdvancedOrder MUST follow:
 
-| bytes    | value             | description / notes                                              |
-| -------- | ----------------- | ---------------------------------------------------------------- |
-| 0-32     | campaignId        |                                                                  |
-| 32-64    | requirementsIndex | The index of the campaignRequirements that is satisfied by this redemption.                                                                 |
-| 64-96    | redemptionHash    | hash of offchain order ids                                       |
-| 96-\*    | uint256[] traitRedemptionTokenIds | The order MUST be the order of token addresses expected in the TraitRedemption structs. empty array for no trait redemptions |
-| \*-(+32) | salt              | if signer != address(0)                                          |
-| \*-(+\*) | signature         | if signer != address(0). can be for EIP-712 or EIP-1271          |
+| bytes    | value                             | description / notes                                                                  |
+| -------- | --------------------------------- | ------------------------------------------------------------------------------------ |
+| 0-32     | campaignId                        |                                                                                      |
+| 32-64    | requirementsIndex                 | index of the campaignRequirements met                                                |
+| 64-96    | redemptionHash                    | hash of offchain order ids                                                           |
+| 96-\*    | uint256[] traitRedemptionTokenIds | token ids for trait redemptions, MUST be in same order of campaign TraitRedemption[] |
+| \*-(+32) | salt                              | if signer != address(0)                                                              |
+| \*-(+\*) | signature                         | if signer != address(0). can be for EIP-712 or EIP-1271                              |
 
-Upon redemption, the contract offerer MUST check that the campaign is still active (using the same boundary check as Seaport, `startTime <= block.timestamp < endTime`). If it is, it MUST revert with `NotActive()`.
+The contract offerer MUST check that the campaign is active (using the same boundary check as Seaport, `startTime <= block.timestamp < endTime`). If it is not active, it MUST revert with `NotActive()`.
 
 ### Redemptions
 
@@ -128,7 +128,7 @@ The contract offerer MUST check that the `maxCampaignRedemptions` is not exceede
 
 ### Metadata URI
 
-The metadata URI MUST follow the following JSON schema:
+The metadata URI MUST conform to the below JSON schema:
 
 ```json
 {
