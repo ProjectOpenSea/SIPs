@@ -2,7 +2,7 @@
 sip: 14
 title: Redeemable Contract Offerer
 description: A Seaport Contract Offerer that uses ERC-7496 Dynamic Traits to enable onchain redemptions
-author: Ryan Ghods (@ryanio), 0age (@0age)
+author: Ryan Ghods (@ryanio), 0age (@0age), Stephan Min (@stephankmin)
 discussions-to: https://github.com/ProjectOpenSea/SIPs/discussions/18
 status: Draft
 type: Standards Track
@@ -13,7 +13,7 @@ requires: 5
 
 ## Abstract
 
-This specification proposes a standard for a Seaport Contract Offerer that uses ERC-7496 Dynamic Traits to enable onchain redemptions. This also allows a Seaport zone to use the Dynamic Traits standard to ensure redemptions cannot be frontrun when NFTs are listed to be sold with a guarantee of certain traits.
+This specification proposes a standard for a Seaport Contract Offerer that uses ERC-7496 Dynamic Traits to enable onchain and offchain redemptions. This also allows a Seaport zone to use the Dynamic Traits standard to ensure redemptions cannot be frontrun when NFTs are listed to be sold with a guarantee of certain traits.
 
 ## Motivation
 
@@ -23,7 +23,7 @@ Traits and metadata for non-fungible and semi-fungible tokens are often stored o
 
 The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in RFC 2119 and RFC 8174.
 
-The contract offerer MUST have the following interface and MUST return `true` for EIP-165 supportsInterface for `0x12345678`, the 4 byte interfaceId of the below.
+The contract offerer MUST have the following interface and MUST return `true` for EIP-165 supportsInterface for `0x12345678(placeholder, to be set here when finalized)`, the 4 byte interfaceId of the below.
 
 ```solidity
 interface IRedeemableContractOfferer {
@@ -38,8 +38,12 @@ interface IRedeemableContractOfferer {
       uint32 maxCampaignRedemptions;
       address manager; // the address that can modify the campaign
       address signer; // null address means no EIP-712 signature required
+      CampaignRequirements[] campaignRequirements;
+  }
+  struct CampaignRequirements {
       OfferItem[] offer; // items to be minted, can be empty for offchain redeemable
-      ConsiderationItem[] consideration; // the items you are transferring to recipient
+      ConsiderationItem[] consideration; // items transferring to recipient
+      TraitRedemption[] traitRedemptions; // the required traitRedemptions
   }
   struct TraitRedemption {
     uint8 substandard;
@@ -47,7 +51,7 @@ interface IRedeemableContractOfferer {
     uint256 identifier;
     bytes32 traitKey;
     bytes32 traitValue;
-    bytes substandardValue;
+    bytes32 substandardValue;
   }
 
   /* Getters */
@@ -69,33 +73,23 @@ Updates to campaigns MUST use `updateCampaign` and MUST emit the `CampaignUpdate
 
 ### Offer
 
-If tokens are set in the params `offer`, the tokens MUST implement the `IRedemptionMintable` interface in order to support minting new items. The implementation SHOULD be however the token mechanics are desired. The implementing token MUST return true for EIP-165 `supportsInterface` for the interfaceIds of: `IERC721RedemptionMintable: 0x12345678` or `IERC1155RedemptionMintable: 0x12345678`
+If tokens are set in the params `offer`, the tokens MUST implement the `IRedemptionMintable` interface in order to support minting new items. The implementation SHOULD be however the token mechanics are desired. The implementing token MUST return true for ERC-165 `supportsInterface` for the interfaceId of `IRedemptionMintable`, `0x12345678(placeholder, to be set here when finalized)`.
 
 ```solidify
-interface IERC721RedemptionMintable {
-  function mintRedemption(address to, SpentItem[] calldata spent) external returns (uint256[] memory tokenIds);
-}
-
-interface IERC1155RedemptionMintable {
-  function mintRedemption(address to, SpentItem[] calldata spent) external returns (uint256[] memory tokenIds, uint256[] amounts);
+interface IRedemptionMintable {
+  function mintRedemption(uint256 campaignId, address recipient, SpentItem[] calldata spent) external;
 }
 ```
 
-The array length return values of `tokenIds` and `amounts` for `IERC1155RedemptionMintable` MUST equal each other.
-
 ### Consideration
 
-Any token may be used in the RedeemableParams `consideration`. This will ensure the token is transferred to the `recipient`. If the token is meant to be burned the recipient SHOULD be `0x000000000000000000000000000000000000dEaD`.
-
-### Dynamic traits
-
-The contract offerer MUST include the ERC-7496 Dynamic Traits interface itself in case the campaign is a trait redemption and the specified token does not implement Dynamic Traits itself. According to the Dynamic Traits specification for "registry" functionality, the first 20 bytes of the `traitKey` should be the contract address to associate the proper `tokenId`.
+Any token may be used in the RedeemableParams `consideration`. This will ensure the token is transferred to the `recipient`. If the token is meant to be burned the recipient SHOULD be `0x000000000000000000000000000000000000dEaD`, since it is against ERC-721 and ERC-1155 specifications to transfer items to the null address.
 
 ### Signer
 
 A signer MAY be specified to provide a signature to process the redemption. If the signer is NOT the null address, the signature MUST recover to the signer address via EIP-712 or EIP-1271.
 
-The EIP-712 struct for signing MUST be as follows: `SignedRedeem(address owner,address redeemedToken, uint256[] tokenIds,bytes32 redemptionHash, uint256 salt)"`
+The EIP-712 struct for signing MUST be as follows: `SignedRedeem(address owner,address redeemedToken, uint256[] tokenIds,uint256 requirementsIndex,bytes32 redemptionHash, uint256 salt)"`
 
 ### AdvancedOrder extraData
 
@@ -104,8 +98,9 @@ When interacting with the contract offerer via Seaport, the extraData/context la
 | bytes    | value             | description / notes                                              |
 | -------- | ----------------- | ---------------------------------------------------------------- |
 | 0-32     | campaignId        |                                                                  |
-| 32-64    | redemptionHash    | hash of offchain order ids                                       |
-| 64-\*    | TraitRedemption[] | see TraitRedemption struct. empty array for no trait redemptions |
+| 32-64    | requirementsIndex | The index of the campaignRequirements that is satisfied by this redemption.                                                                 |
+| 64-96    | redemptionHash    | hash of offchain order ids                                       |
+| 96-\*    | uint256[] traitRedemptionTokenIds | The order MUST be the order of token addresses expected in the TraitRedemption structs. empty array for no trait redemptions |
 | \*-(+32) | salt              | if signer != address(0)                                          |
 | \*-(+\*) | signature         | if signer != address(0). can be for EIP-712 or EIP-1271          |
 
@@ -178,6 +173,21 @@ The metadata URI MUST follow the following JSON schema:
       "type": "string",
       "description": "The language tag for the content provided by this metadata. https://www.rfc-editor.org/rfc/rfc9110.html#name-language-tags"
     },
+    "translations": {
+      "type": "object",
+      "properties": {
+        "locale": {
+          "type": "string"
+        },
+        "originalContent": {
+          "type": "string"
+        },
+        "translatedContent": {
+          "type": "string"
+        }
+      },
+      "description": "Translations for content provided by this metadata."
+    },
     "maxRedemptionsPerToken": {
       "type": "string",
       "description": "The maximum number of redemptions per token. When isBurn is true should be 1, else can be a number based on the trait redemptions limit."
@@ -188,7 +198,7 @@ The metadata URI MUST follow the following JSON schema:
     },
     "uuid": {
       "type": "string",
-      "description": "A unique identifier for the campaign, for backends to identify when draft campaigns are published onchain."
+      "description": "An optional unique identifier for the campaign, for backends to identify when draft campaigns are published onchain."
     },
     "productLimitForRedemption": {
       "type": "number",
