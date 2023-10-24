@@ -38,7 +38,7 @@ interface IRedeemableContractOfferer {
       uint32 maxCampaignRedemptions;
       address manager; // the address that can modify the campaign
       address signer; // null address means no EIP-712 signature required
-      CampaignRequirements[] campaignRequirements;
+      CampaignRequirements[] requirements;
   }
   struct CampaignRequirements {
       OfferItem[] offer; // items to be minted, can be empty for offchain redeemable
@@ -98,7 +98,7 @@ When interacting with the contract offerer via Seaport, the extraData/context la
 | bytes    | value                             | description / notes                                                                  |
 | -------- | --------------------------------- | ------------------------------------------------------------------------------------ |
 | 0-32     | campaignId                        |                                                                                      |
-| 32-64    | requirementsIndex                 | index of the campaignRequirements met                                                |
+| 32-64    | requirementsIndex                 | index of the campaign requirements met                                                |
 | 64-96    | redemptionHash                    | hash of offchain order ids                                                           |
 | 96-\*    | uint256[] traitRedemptionTokenIds | token ids for trait redemptions, MUST be in same order of campaign TraitRedemption[] |
 | \*-(+32) | salt                              | if signer != address(0)                                                              |
