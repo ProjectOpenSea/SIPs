@@ -53,21 +53,27 @@ The `context` argument MUST be populated based on the "substandards" specified b
 
 The `context` MUST start with a byte identifying the substandard ID below. The byte SHOULD be 1-indexed, but for gas efficiency reasons, 00 MAY also be used as an alias to reference substandard ID 1.
 
+todo MUST be compact
+
 Initial substandards include:
 
 | substandard ID | description                                                                                                  | decoding scheme                                                                 |
 | -------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
-| 1              | required traitValue for traitKey (single)                                                                    | `(uint8 comparisonEnum, address token, bytes32 traitValue, bytes32 traitKey)`   |
-| 2              | required traitValues for traitKeys (multiple)                                                                | `(uint8 comparisonEnum, address token, bytes32 traitValue, bytes32 traitKey)[]` |
-| 3              | required hash of values of all traitKeys (up to traitKeysLength, use uint256 max for all possible traitKeys) | `(address token, uint256 traitKeysLength, bytes32 expectedHash)`                |
+| 0             | first consideration item, comparison "equal to", single trait key, zero trait value  | `(bytes32 traitKey)` TODO think about this should be in the zone hash, when no extra data is provided |
+| 1             | token address and id from first offer item | `(uint8 comparisonEnum, bytes32 traitValue, bytes32 traitKey)` |
+| 2             | token address and id from the first consideration item | `(uint8 comparisonEnum, bytes32 traitValue, bytes32 traitKey)` |
+| 3              | single token id, single trait key and value(single)                                                                    | `(uint8 comparisonEnum, address token, uint256 tokenId, bytes32 traitValue, bytes32 traitKey)`   |
+| 4              | multiple token ids, single trait key and value(multiple)                                                                | `(uint8 comparisonEnum, address token, uint256 tokenId, bytes32 traitValue, bytes32 traitKey)[]` |
+| 5             | single token id, multiple traitKeys and values | `` |
 
 | comparison enum | behavior                 |
 | --------------- | ------------------------ |
 | 0               | equal to                 |
-| 1               | less than                |
-| 2               | less than or equal to    |
-| 3               | greater than             |
-| 4               | greater than or equal to |
+| 1               | not equal to             |
+| 2               | less than                |
+| 3               | less than or equal to    |
+| 4               | greater than             |
+| 5               | greater than or equal to |
 
 Additional substandards MAY be specified in subsequent SIPs that inherit this SIP.
 
