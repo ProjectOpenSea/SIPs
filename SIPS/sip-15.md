@@ -25,7 +25,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 ### Requirements
 
-This SIP requires a single variable data array as part of supplied `extraData`.
+This SIP requires a single fixed data array as part of supplied `extraData`.
 
 Zones or contract offerers that do not implement additional SIPs must support extraData version byte `0x00` in accordance with SIP-6, while zones or contract offerers that implement additional SIPs with their own data requirements will require other version bytes.
 
