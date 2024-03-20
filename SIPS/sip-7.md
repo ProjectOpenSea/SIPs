@@ -105,6 +105,8 @@ The `context` argument will be populated based on the "substandards" specified b
 
 If substandards are being used, each encoded data segment as part of the context MUST start with the SIP-7 byte identifying the substandard ID below. The byte SHOULD be 1-indexed, but for gas efficiency reasons, 00 MAY also be used as an alias to reference substandard ID 1. If no substandard is used there MUST be no substandard version byte or additional substandard data provided.
 
+Note that zones or contract offerers MUST validate substandard ID data if provided, but it is at the discretion of the zone or contract offerer to determine which substandards MUST be provided and which substandards MAY be provided.
+
 Initial substandards include:
 | substandard ID | description | decoding scheme | substandard request data supplied to API | substandard response data returned from API |
 | -------------- | --------------------------------------------------------- | ----------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
