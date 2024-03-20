@@ -115,7 +115,7 @@ Initial substandards include:
 | 3 | required hash of full ReceivedItem array | `(bytes32)` | `{"requestedReceivedItems": null OR [{"itemType": "1", "token": "abc", ...}, ...]}` | `{"requiredReceivedItems": [{"itemType": "1", ...}, ...], "requiredReceivedItemsHash": "0xabc..."}` |
 | 4 | required order hashes included as part of fulfillment | `(bytes32[])` | `{"requestedIncludedOrderHashes": null OR ["0xabc...", ...]}` | `{"requiredIncludedOrderHashes": ["0xabc...", ...]}` |
 | 5 | required order hashes NOT included as part of fulfillment | `(bytes32[])` | `{"requestedExcludedOrderHashes": null OR ["0xabc...", ...]}` | `{"requiredExcludedOrderHashes": ["0xabc...", ...]}` |
-| 6 | required hash of full ReceivedItem array scaled to 100% of order | `(uint256, bytes32)` | `{}` | `{"originalFirstOfferItemAmount": "123...", "requiredReceivedItemsHash": "0xabc..."}` |
+| 6 | required hash of full ReceivedItem array at total fulfillment of order | `(uint256, bytes32)` | `{"requestedReceivedItems": null OR [{"itemType": "1", "token": "abc", ...}, ...]}` | `{"originalFirstOfferItemAmount": "123...", "requiredReceivedItems": [{"itemType": "1", ...}, ...], "requiredReceivedItemsHash": "0xabc..."}` |
 
 Additional substandards MAY be specified in subsequent SIPs that inherit SIP-7.
 
