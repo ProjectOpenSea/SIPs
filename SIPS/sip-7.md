@@ -103,7 +103,9 @@ If the zone or contract offerer allows for active signers to interact with the z
 
 The `context` argument will be populated based on the "substandards" specified by the zone or contract offerer; these substandards will be encoded in accordance with SIP-6 versioning with the assumption that all necessary data is to be treated as "variable" data arrays. The ordering for each encoded data segment included as part of context, supplied as part of the server API request, and returned as part of the server API response will be dictated by the order that the zone or contract offerer returns the substandard IDs.
 
-If a substandard is being used the context MUST start with a SIP-7 byte identifying the substandard ID below. The byte SHOULD be 1-indexed, but for gas efficiency reasons, 00 MAY also be used as an alias to reference substandard ID 1. If no substandard is used there MUST be no substandard version byte or additional substandard data provided.
+If substandards are being used, each encoded data segment as part of the context MUST start with the SIP-7 byte identifying the substandard ID below. The byte SHOULD be 1-indexed, but for gas efficiency reasons, 00 MAY also be used as an alias to reference substandard ID 1. If no substandard is used there MUST be no substandard version byte or additional substandard data provided.
+
+Note that zones or contract offerers MUST validate substandard ID data if provided, but it is at the discretion of the zone or contract offerer to determine which substandards MUST be provided and which substandards MAY be provided.
 
 Initial substandards include:
 | substandard ID | description | decoding scheme | substandard request data supplied to API | substandard response data returned from API |
@@ -113,6 +115,7 @@ Initial substandards include:
 | 3 | required hash of full ReceivedItem array | `(bytes32)` | `{"requestedReceivedItems": null OR [{"itemType": "1", "token": "abc", ...}, ...]}` | `{"requiredReceivedItems": [{"itemType": "1", ...}, ...], "requiredReceivedItemsHash": "0xabc..."}` |
 | 4 | required order hashes included as part of fulfillment | `(bytes32[])` | `{"requestedIncludedOrderHashes": null OR ["0xabc...", ...]}` | `{"requiredIncludedOrderHashes": ["0xabc...", ...]}` |
 | 5 | required order hashes NOT included as part of fulfillment | `(bytes32[])` | `{"requestedExcludedOrderHashes": null OR ["0xabc...", ...]}` | `{"requiredExcludedOrderHashes": ["0xabc...", ...]}` |
+| 6 | full amount of order's first offer item, and required hash of full ReceivedItem array at total fulfillment of order | `(uint256, bytes32)` | `{"requestedReceivedItems": null OR [{"itemType": "1", "token": "abc", ...}, ...]}` | `{"originalFirstOfferItemAmount": "123...", "requiredReceivedItems": [{"itemType": "1", ...}, ...], "requiredReceivedItemsHash": "0xabc..."}` |
 
 Additional substandards MAY be specified in subsequent SIPs that inherit SIP-7.
 
