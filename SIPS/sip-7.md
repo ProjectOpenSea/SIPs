@@ -73,7 +73,7 @@ The `domainSeparator` used to recover the signer MUST check if the `block.chaini
 
 When a new signer is added to a zone or contract offerer, that contract MUST emit the event `event SignerAdded(address signer);`. When removed it MUST emit the event `event SignerRemoved(address signer)`.
 
-Once a signer is removed, it MUST NOT be able to be reactivated, to protect against compromised keys. If a removed signer is attempted to be added, the contract MUST revert with `error SignerCannotBeReauthorized()`.
+Once a signer is removed, it MUST NOT be able to be reactivated, to protect against compromised keys. If a removed signer is attempted to be added, the contract MUST revert with `error SignerCannotBeReauthorized(address signer)`.
 
 If a duplicate signer is added it MUST revert with `error SignerAlreadyActive(address signer)`. If a signer not found is removed it MUST revert with `error SignerNotActive(address signer)`.
 
