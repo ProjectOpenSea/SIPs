@@ -108,17 +108,422 @@ If substandards are being used, each encoded data segment as part of the context
 Note that zones or contract offerers MUST validate substandard ID data if provided, but it is at the discretion of the zone or contract offerer to determine which substandards MUST be provided and which substandards MAY be provided.
 
 Initial substandards include:
-| substandard ID | description | decoding scheme | substandard request data supplied to API | substandard response data returned from API |
-| -------------- | --------------------------------------------------------- | ----------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
-| 1 | required identifier for first returned received item | `(uint256)` | `{"requestedIdentifier": "123..."}` | `{"requiredIdentifier": "123..."}` |
-| 2 | required initial "tip" | `(uint8, address, uint256, uint256, address)` | `{"requestedTip": null OR {"itemType": "1", "token": "abc", ...}}` | `{"requiredTip": {"itemType": "1", "token": "abc", ...}}` |
-| 3 | required hash of full ReceivedItem array | `(bytes32)` | `{"requestedReceivedItems": null OR [{"itemType": "1", "token": "abc", ...}, ...]}` | `{"requiredReceivedItems": [{"itemType": "1", ...}, ...], "requiredReceivedItemsHash": "0xabc..."}` |
-| 4 | required order hashes included as part of fulfillment | `(bytes32[])` | `{"requestedIncludedOrderHashes": null OR ["0xabc...", ...]}` | `{"requiredIncludedOrderHashes": ["0xabc...", ...]}` |
-| 5 | required order hashes NOT included as part of fulfillment | `(bytes32[])` | `{"requestedExcludedOrderHashes": null OR ["0xabc...", ...]}` | `{"requiredExcludedOrderHashes": ["0xabc...", ...]}` |
-| 6 | full amount of order's first offer item, and required hash of full ReceivedItem array at total fulfillment of order | `(uint256, bytes32)` | `{"requestedReceivedItems": null OR [{"itemType": "1", "token": "abc", ...}, ...]}` | `{"originalFirstOfferItemAmount": "123...", "requiredReceivedItems": [{"itemType": "1", ...}, ...], "requiredReceivedItemsHash": "0xabc..."}` |
-| 7 | required identifier for first returned received item, and trigger call to `beforeAuthorizedTransfer(address operator, address token)` and `afterAuthorizedTransfer(address token)` on the specified registry, supplying a specified operator and token from first 721 or 1155 item | `abi.encodePacked(uint256 identifer, address registry, address operator)` | `{"requestedIdentifier": "123...", "requestedRegistry": "0xabc...", "requestedOperator": "0xdef..."}` | `{"requiredIdentifier": "123...", "requiredRegistry": "0xabc...", "requiredOperator": "0xdef..."}` |
-| 8 | required identifier for first returned received item, and trigger call to `beforeAuthorizedTransfer(address token, uint256 tokenId)` and `afterAuthorizedTransfer(address token, uint256 tokenId)` on the specified registry, using token and tokenId from first 721 or 1155 item | `abi.encodePacked(uint256 identifer, address registry)` | `{"requestedIdentifier": "123...", "requestedRegistry": "0xabc..."}` | `{"requiredIdentifier": "123...", "requiredRegistry": "0xabc..."}` |
-| 9 | required identifier for first returned received item, and trigger call to `beforeAuthorizedTransferWithAmount(address token, uint256 tokenId, uint256 amount)` and `afterAuthorizedTransferWithAmount(address token, uint256 tokenId)` on the specified registry, using token, tokenId & amount from first 721 or 1155 item | `abi.encodePacked(uint256 identifer, address registry)` | `{"requestedIdentifier": "123...", "requestedRegistry": "0xabc..."}` | `{"requiredIdentifier": "123...", "requiredRegistry": "0xabc..."}` |
+<table>
+<tr>
+  <th>substandard ID</th>
+  <th>description</th>
+  <th>decoding scheme</th>
+  <th>substandard request data supplied to API</th>
+  <th>substandard response data returned from API</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td>required identifier for first returned received item</td>
+  <td>
+
+  ```solidity
+  abi.encodePacked(uint256 identifier)
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requestedIdentifier": "123..."
+  }
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requiredIdentifier": "123..."
+  }
+  ```
+
+  </td>
+</tr>
+<tr>
+  <td>2</td>
+  <td>required initial "tip"</td>
+  <td>
+
+  ```solidity
+  abi.encodePacked(
+    uint8 itemType,
+    address token,
+    uint256 identifier,
+    uint256 amount,
+    address recipient
+  )
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requestedTip": null
+  }
+
+  OR
+
+  {
+    "requestedTip" {
+      "itemType": "1",
+      "token": "abc",
+      ...
+    }
+  }
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requiredTip": {
+      "itemType": "1",
+      "token": "abc",
+      ...
+    }
+  }
+  ```
+
+  </td>
+</tr>
+<tr>
+  <td>3</td>
+  <td>
+
+  required hash of full `ReceivedItem` array
+
+  </td>
+  <td>
+
+  ```solidity
+  keccak256(
+    abi.encodePacked(
+      uint8 item1ItemType,
+      address item1Token,
+      uint256 item1Identifier,
+      uint256 item1Amount,
+      address item1Recipient,
+      uint8 item2ItemType,
+      ...
+    )
+  )
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requestedReceivedItems": null
+  }
+
+  OR
+
+  {
+    "requestedReceivedItems": [
+      {
+        "itemType": "1",
+        "token": "abc",
+        ...
+      },
+      ...
+    ]
+  }
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requiredReceivedItems": [
+      {
+        "itemType": "1",
+        ...
+      },
+      ...
+    ],
+    "requiredReceivedItemsHash": "0xabc..."
+  }
+  ```
+
+  </td>
+</tr>
+<tr>
+  <td>4</td>
+  <td>required order hashes included as part of fulfillment</td>
+  <td>
+
+  ```solidity
+  abi.encode(bytes32[] orderHashes)
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requestedIncludedOrderHashes": null
+  }
+
+  OR
+
+  {
+    "requestedIncludedOrderHashes": [
+      "0xabc...",
+      ...
+    ]
+  }
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requiredIncludedOrderHashes": [
+      "0xabc...",
+      ...
+    ]
+  }
+  ```
+
+  </td>
+</tr>
+<tr>
+  <td>5</td>
+  <td>required order hashes NOT included as part of fulfillment</td>
+  <td>
+
+  ```solidity
+  abi.encode(bytes32[] orderHashes)
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requestedExcludedOrderHashes": null
+  }
+
+  OR
+
+  {
+    "requestedExcludedOrderHashes": [
+      "0xabc...",
+      ...
+    ]
+  }
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requiredExcludedOrderHashes": [
+      "0xabc...",
+      ...
+    ]
+  }
+  ```
+
+  </td>
+</tr>
+<tr>
+  <td>6</td>
+  <td>
+
+  full amount of order's first offer item, and required hash of full `ReceivedItem` array at total fulfillment of order
+
+  </td>
+  <td>
+
+  ```solidity
+  abi.encodePacked(
+    uint256 originalFirstOfferItemAmount,
+    keccak256(
+      abi.encodePacked(
+        uint8 item1ItemType,
+        address item1Token,
+        uint256 item1Identifier,
+        uint256 item1Amount,
+        address item1Recipient,
+        uint8 item2ItemType,
+        ...
+      )
+    )
+  )
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requestedReceivedItems": null
+  }
+
+  OR
+
+  {
+    "requestedReceivedItems": [
+      {
+        "itemType": "1",
+        "token": "abc",
+        ...
+      },
+      ...
+    ]
+  }
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "originalFirstOfferItemAmount": "123...",
+    "requiredReceivedItems": [
+      {
+        "itemType": "1",
+        ...
+      },
+      ...
+    ],
+    "requiredReceivedItemsHash": "0xabc..."
+  }
+  ```
+
+  </td>
+</tr>
+<tr>
+  <td>7</td>
+  <td>
+
+  required identifier for first returned received item, and trigger call to `beforeAuthorizedTransfer(address operator, address token)` and `afterAuthorizedTransfer(address token)` on the specified registry, supplying a specified operator and token from first 721 or 1155 item
+
+  </td>
+  <td>
+
+  ```solidity
+  abi.encodePacked(
+    uint256 identifer,
+    address registry,
+    address operator
+  )
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requestedIdentifier": "123...",
+    "requestedRegistry": "0xabc...",
+    "requestedOperator": "0xdef..."
+  }
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requiredIdentifier": "123...",
+    "requiredRegistry": "0xabc...",
+    "requiredOperator": "0xdef..."
+  }
+  ```
+
+  </td>
+</tr>
+<tr>
+  <td>8</td>
+  <td>
+
+  required identifier for first returned received item, and trigger call to `beforeAuthorizedTransfer(address token, uint256 tokenId)` and `afterAuthorizedTransfer(address token, uint256 tokenId)` on the specified registry, using token and tokenId from first 721 or 1155 item
+
+  </td>
+  <td>
+
+  ```solidity
+  abi.encodePacked(
+    uint256 identifer,
+    address registry
+  )
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requestedIdentifier": "123...",
+    "requestedRegistry": "0xabc..."
+  }
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requiredIdentifier": "123...",
+    "requiredRegistry": "0xabc..."
+  }
+  ```
+
+  </td>
+</tr>
+<tr>
+  <td>9</td>
+  <td>
+
+  required identifier for first returned received item, and trigger call to `beforeAuthorizedTransferWithAmount(address token, uint256 tokenId, uint256 amount)` and `afterAuthorizedTransferWithAmount(address token, uint256 tokenId)` on the specified registry, using token, tokenId & amount from first 721 or 1155 item
+
+  </td>
+  <td>
+
+  ```solidity
+  abi.encodePacked(
+    uint256 identifer,
+    address registry
+  )
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requestedIdentifier": "123...",
+    "requestedRegistry": "0xabc..."
+  }
+  ```
+
+  </td>
+  <td>
+
+  ```json
+  {
+    "requiredIdentifier": "123...",
+    "requiredRegistry": "0xabc..."
+  }
+  ```
+
+  </td>
+</tr>
+</table>
 
 Additional substandards MAY be specified in subsequent SIPs that inherit SIP-7.
 
