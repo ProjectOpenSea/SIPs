@@ -57,14 +57,14 @@ todo MUST be compact
 
 Initial substandards include:
 
-| substandard ID | description                                                                                                  | decoding scheme                                                                 |
-| -------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
-| 0             | first consideration item, comparison "equal to", single trait key, zero trait value  | `(bytes32 traitKey)` TODO think about this should be in the zone hash, when no extra data is provided |
-| 1             | token address and id from first offer item | `(uint8 comparisonEnum, bytes32 traitValue, bytes32 traitKey)` |
-| 2             | token address and id from the first consideration item | `(uint8 comparisonEnum, bytes32 traitValue, bytes32 traitKey)` |
-| 3              | single token id, single trait key and value(single)                                                                    | `(uint8 comparisonEnum, address token, uint256 tokenId, bytes32 traitValue, bytes32 traitKey)`   |
-| 4              | multiple token ids, single trait key and value(multiple)                                                                | `(uint8 comparisonEnum, address token, uint256 tokenId, bytes32 traitValue, bytes32 traitKey)[]` |
-| 5             | single token id, multiple traitKeys and values | `` |
+| substandard ID | description                                                                         | decoding scheme                                                                                                                            |
+| -------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
+| 0              | first consideration item, comparison "equal to", single trait key, zero trait value | `(bytes32 traitKey)` TODO think about this should be in the zone hash, when no extra data is provided                                      |
+| 1              | token address and id from first offer item                                          | `(uint8 comparisonEnum, bytes32 traitValue, bytes32 traitKey)`                                                                             |
+| 2              | token address and id from the first consideration item                              | `(uint8 comparisonEnum, bytes32 traitValue, bytes32 traitKey)`                                                                             |
+| 3              | single token id, single trait key and value(single)                                 | `(uint8 comparisonEnum, address token, uint256 tokenId, bytes32 traitValue, bytes32 traitKey)`                                             |
+| 4              | multiple token ids, single trait key and value(multiple)                            | `(uint8 comparisonEnum, address token, traits, uint256 tokenId, bytes32 traitValue, bytes32 traitKey)[]`                                   |
+| 5              | single token id, optional traits address, multiple traitKeys and values             | `ComparisonStruct(uint8[] comparisonEnums, address token, address traits, uint256 identifier, bytes32[] traitValues, bytes32[] traitKeys)` |
 
 | comparison enum | behavior                 |
 | --------------- | ------------------------ |
