@@ -190,7 +190,7 @@ The metadata URI MUST conform to the below JSON schema:
     },
     "maxRedemptionsPerToken": {
       "type": "string",
-      "description": "The maximum number of redemptions per token. When isBurn is true should be 1, else can be a number based on the trait redemptions limit."
+      "description": "The maximum number of redemptions per token. When isBurn is true should be 1, else can be a number based on the trait redemption limit."
     },
     "isBurn": {
       "type": "string",
