@@ -15,7 +15,7 @@ _This document is currently WIP. Please suggest improvements or changes in the d
 
 ## Abstract
 
-This SIP outlines an interface for NFTs to serve as contract offerers. These NFTs then provide orders that unlock transferability of specified tokens for the duration of the Seaport fulfillment. This allows these contracts to declare consideration items based on the tokens being transfered, and Seaport will ensure that those items are transferred to the named recipients. In short, Seaport acts similarly to an "embedded" marketplace for the implementing NFTs. This interface is proposed as a SIP to ensure fulfillers can follow a standard procedure for interacting with Seaport-extended NFTs, either for primary sales, secondary sales, or both.
+This SIP outlines an interface for NFTs to serve as contract offerers. These NFTs then provide orders that unlock transferability of specified tokens for the duration of the Seaport fulfillment. This allows these contracts to declare consideration items based on the tokens being transferred, and Seaport will ensure that those items are transferred to the named recipients. In short, Seaport acts similarly to an "embedded" marketplace for the implementing NFTs. This interface is proposed as a SIP to ensure fulfillers can follow a standard procedure for interacting with Seaport-extended NFTs, either for primary sales, secondary sales, or both.
 
 ## Motivation
 
