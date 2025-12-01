@@ -2,7 +2,7 @@
 sip: 15
 title: Interface for Dynamic Traits Enforcement
 description: A Seaport interface for specifying and enforcing values of ERC-7496 Dynamic Traits.
-author: Ryan Ghods (@ryanio), James Wenzel (emo.eth), Benjamin C. LeFevre (BCLeFevre)
+author: Ryan Ghods (ryanio), James Wenzel (emo.eth), Benjamin C. LeFevre (BCLeFevre)
 discussions-to: https://github.com/ProjectOpenSea/SIPs/discussions/19
 status: Draft
 type: Standards
