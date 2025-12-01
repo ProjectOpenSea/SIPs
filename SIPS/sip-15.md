@@ -2,7 +2,7 @@
 sip: 15
 title: Interface for Dynamic Traits Enforcement
 description: A Seaport interface for specifying and enforcing values of ERC-7496 Dynamic Traits.
-author: Ryan Ghods (@ryanio), James Wenzel (emo.eth)
+author: Ryan Ghods (ryanio), James Wenzel (emo.eth), Benjamin C. LeFevre (BCLeFevre)
 discussions-to: https://github.com/ProjectOpenSea/SIPs/discussions/19
 status: Draft
 type: Standards
@@ -51,20 +51,15 @@ If the implementing contract is a contract offerer, it MUST provide `previewOrde
 
 The `context` argument MUST be populated based on the "substandards" specified by the zone or contract offerer; these substandards will be encoded in accordance with SIP-6 versioning with the assumption that all necessary data is to be treated as "variable" data arrays.
 
-The `context` MUST start with a byte identifying the substandard ID below. The byte SHOULD be 1-indexed, but for gas efficiency reasons, 00 MAY also be used as an alias to reference substandard ID 1.
-
-todo MUST be compact
+The `context` MUST start with a byte identifying the substandard ID below. For gas efficiency, substandard IDs SHOULD be kept compact (for example, starting at 0) and re‑used consistently across integrations.
 
 Initial substandards include:
 
-| substandard ID | description                                                                                                  | decoding scheme                                                                 |
-| -------------- | ------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------- |
-| 0             | first consideration item, comparison "equal to", single trait key, zero trait value  | `(bytes32 traitKey)` TODO think about this should be in the zone hash, when no extra data is provided |
-| 1             | token address and id from first offer item | `(uint8 comparisonEnum, bytes32 traitValue, bytes32 traitKey)` |
-| 2             | token address and id from the first consideration item | `(uint8 comparisonEnum, bytes32 traitValue, bytes32 traitKey)` |
-| 3              | single token id, single trait key and value(single)                                                                    | `(uint8 comparisonEnum, address token, uint256 tokenId, bytes32 traitValue, bytes32 traitKey)`   |
-| 4              | multiple token ids, single trait key and value(multiple)                                                                | `(uint8 comparisonEnum, address token, uint256 tokenId, bytes32 traitValue, bytes32 traitKey)[]` |
-| 5             | single token id, multiple traitKeys and values | `` |
+| substandard ID | description                              | decoding scheme                                                                                        |
+| -------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------ |
+| 0              | single token, multiple traits            | `(address token, uint256 tokenId, (bytes32 traitKey, bytes32 traitValue, uint8 comparisonEnum)[])`     |
+| 1              | multiple tokens, single trait each       | `(address token, uint256 tokenId, bytes32 traitKey, bytes32 traitValue, uint8 comparisonEnum)[]`       |
+| 2              | multiple tokens, multiple traits each    | `((address token, uint256 tokenId, (bytes32 traitKey, bytes32 traitValue, uint8 comparisonEnum)[])[])`  |
 
 | comparison enum | behavior                 |
 | --------------- | ------------------------ |
@@ -74,6 +69,8 @@ Initial substandards include:
 | 3               | less than or equal to    |
 | 4               | greater than             |
 | 5               | greater than or equal to |
+
+For substandard 0, the context explicitly binds a single NFT subject via `(address token, uint256 tokenId)` and then encodes one or more `(bytes32 traitKey, bytes32 traitValue, uint8 comparisonEnum)` tuples for that subject. Substandard 1 encodes multiple `(token, tokenId, traitKey, traitValue, comparisonEnum)` tuples for validating a single trait on each of multiple tokens. Substandard 2 combines both approaches, allowing multiple tokens each with multiple traits.
 
 Additional substandards MAY be specified in subsequent SIPs that inherit this SIP.
 
