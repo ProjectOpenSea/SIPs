@@ -59,7 +59,7 @@ Initial substandards include:
 | -------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------ |
 | 0              | single token, multiple traits            | `(address token, uint256 tokenId, (bytes32 traitKey, bytes32 traitValue, uint8 comparisonEnum)[])`     |
 | 1              | multiple tokens, single trait each       | `(address token, uint256 tokenId, bytes32 traitKey, bytes32 traitValue, uint8 comparisonEnum)[]`       |
-| 2              | multiple tokens, multiple traits each    | `((address token, uint256 tokenId, (bytes32 traitKey, bytes32 traitValue, uint8 comparisonEnum)[])[])`  |
+| 2              | multiple tokens, multiple traits each    | `(uint256 numTokens, (address token, uint256 tokenId, (bytes32 traitKey, bytes32 traitValue, uint8 comparisonEnum)[])[])`  |
 
 | comparison enum | behavior                 |
 | --------------- | ------------------------ |
@@ -70,7 +70,7 @@ Initial substandards include:
 | 4               | greater than             |
 | 5               | greater than or equal to |
 
-For substandard 0, the context explicitly binds a single NFT subject via `(address token, uint256 tokenId)` and then encodes one or more `(bytes32 traitKey, bytes32 traitValue, uint8 comparisonEnum)` tuples for that subject. Substandard 1 encodes multiple `(token, tokenId, traitKey, traitValue, comparisonEnum)` tuples for validating a single trait on each of multiple tokens. Substandard 2 combines both approaches, allowing multiple tokens each with multiple traits.
+For substandard 0, the context explicitly binds a single NFT subject via `(address token, uint256 tokenId)` and then encodes one or more `(bytes32 traitKey, bytes32 traitValue, uint8 comparisonEnum)` tuples for that subject. Substandard 1 encodes multiple `(token, tokenId, traitKey, traitValue, comparisonEnum)` tuples for validating a single trait on each of multiple tokens. Substandard 2 combines both approaches: it begins with a `numTokens` length prefix followed by an array of token entries, each containing multiple trait tuples.
 
 Additional substandards MAY be specified in subsequent SIPs that inherit this SIP.
 
