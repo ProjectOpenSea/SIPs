@@ -51,7 +51,7 @@ Zones and contract offerers MUST decode relevant data arrays based on the order 
 
 By way of example, if a zone implements SIP-X, SIP-Y, and SIP-Z and returns schema IDs in the same order when calling `getSeaportMetadata()`, and each SIP requires a single variable data array, then the zone will accept version 0x03, rejecting any other versions, and will decode the first element (index 0) in the array of variable data arrays as the variable data array for SIP-X, the second element (index 1) as the variable data array for SIP-Y, and the third element (index 2) as the variable data array for SIP-Z.
 
-When a contract is both a zone and a contract offerer, and implements both zone-specific SIPs and contract-order-specific SIPS, extraData construction MUST be based on the current context. In other words, if the contract is being interacted with as a zone, then contract-order-specific SIPs are to be disregarded; alternately, when the contract is being interacted with as a contract offerer, then zone-specific SIPs are to be disregarded.
+When a contract is both a zone and a contract offerer, and implements both zone-specific SIPs and contract-order-specific SIPS, extraData construction MUST be based on the current context. In other words, if the contract is being interacted with as a zone, then contract-order-specific SIPs are to be disregarded; alternatively, when the contract is being interacted with as a contract offerer, then zone-specific SIPs are to be disregarded.
 
 New version bytes MUST be added in new SIPs that require SIP-6.
 

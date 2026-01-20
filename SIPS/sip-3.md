@@ -28,7 +28,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 Permissible origins **MUST** provide a method of uniquely identifying a particular revision of a resource. Examples of such methods may include git commit hashes, version numbers, or publication dates.
 
-Permissible origins **MUST** have a proven history of availability. A origin existing for at least ten years and reliably serving resources would be sufficient—but not necessary—to satisfy this requirement.
+Permissible origins **MUST** have a proven history of availability. An origin existing for at least ten years and reliably serving resources would be sufficient—but not necessary—to satisfy this requirement.
 
 Permissible origins **MUST NOT** charge a fee for accessing resources.
 

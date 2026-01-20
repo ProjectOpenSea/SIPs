@@ -21,7 +21,7 @@ For Seaport implementers, SIPs are a convenient way to track the progress of the
 
 There are three types of SIP:
 
-- A **Standards Track SIP** describes any change that affects most or all Seaport implementations, such as—a change to the protocol, proposed application standards/conventions, or any change or addition that affects the interoperability of applications using Seaport. Standards Track SIPs consist of three parts—a design document, an implementation, and (if warranted) an update to the Seaport codebase. Furthermore, Standards Track SIPs can be broken down into the following categories:
+- A **Standards Track SIP** describes any change that affects most or all Seaport implementations, such as a change to the protocol, proposed application standards/conventions, or any change or addition that affects the interoperability of applications using Seaport. Standards Track SIPs consist of three parts—a design document, an implementation, and (if warranted) an update to the Seaport codebase. Furthermore, Standards Track SIPs can be broken down into the following categories:
 
   - **Core**: improvements requiring a version upgrade, as well as changes that are not necessarily critical but may be relevant to “core dev” discussions.
   - **Networking**: includes improvements around [the P2P specification](./sip-4.md), as well as proposed improvements to network protocol specifications.
@@ -30,7 +30,7 @@ There are three types of SIP:
 
 - A **Meta SIP** describes a process surrounding Seaport or proposes a change to (or an event in) a process. Process SIPs are like Standards Track SIPs but apply to areas other than the Seaport protocol itself. They may propose an implementation, but not to Seaport's codebase; they often require community consensus; unlike Informational SIPs, they are more than recommendations, and users are typically not free to ignore them. Examples include procedures, guidelines, changes to the decision-making process, and changes to the tools or environment used in Seaport development. Any meta-SIP is also considered a Process SIP.
 
-- An **Informational SIP** describes an Seaport design issue, or provides general guidelines or information to the Seaport community, but does not propose a new feature. Informational SIPs do not necessarily represent Seaport community consensus or a recommendation, so users and implementers are free to ignore Informational SIPs or follow their advice.
+- An **Informational SIP** describes a Seaport design issue, or provides general guidelines or information to the Seaport community, but does not propose a new feature. Informational SIPs do not necessarily represent Seaport community consensus or a recommendation, so users and implementers are free to ignore Informational SIPs or follow their advice.
 
 It is highly recommended that a single SIP contain a single key proposal or new idea. The more focused the SIP, the more successful it tends to be. A change to one client doesn't require a SIP; a change that affects multiple clients, or defines a standard for multiple apps to use, does.
 

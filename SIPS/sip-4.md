@@ -19,7 +19,7 @@ This document is designed to formalize a peer-to-peer specification for sharing 
 
 ## Motivation
 
-Since Seaport orders are stored off chain to reduce the cost of listing, this P2P specification helps for participants in the Seaport ecosystem to share orders with each other to increase discoverability and liquidity.
+Since Seaport orders are stored offchain to reduce the cost of listing, this P2P specification helps for participants in the Seaport ecosystem to share orders with each other to increase discoverability and liquidity.
 
 ## Specification
 
