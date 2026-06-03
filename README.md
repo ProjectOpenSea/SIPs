@@ -40,7 +40,7 @@ SIPs are separated into a number of types, and each has its own list of SIPs.
 
 ### Standard Track
 
-Describes any change that affects most or all Seaport implementations, such as a change to the protocol, a change in order validity rules, proposed application standards/conventions, or any change or addition that affects the interoperability of applications using Seaport. Furthermore Standard SIPs can be broken down into the following categories.
+Describes any change that affects most or all Seaport implementations, such as a change to the protocol, a change in order validity rules, proposed application standards/conventions, or any change or addition that affects the interoperability of applications using Seaport. Furthermore, Standard SIPs can be broken down into the following categories.
 
 #### Core
 
